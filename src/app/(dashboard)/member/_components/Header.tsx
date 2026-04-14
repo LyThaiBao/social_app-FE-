@@ -1,14 +1,17 @@
-'use client';
-
+"use client"
 import { getFirstChar } from "@/utils/getFirstChar";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Header() {
   // const character = getFirstChar(fullName);
 
-  const [fullName,setFullName] =useState(localStorage.getItem("fullName")||"");
- 
+  const [fullName,setFullName] =useState<string>("User");
+  useEffect(()=>{
+    (()=>{
+      setFullName(localStorage.getItem("fullName")||"User")
+    })()
+  },[])
 
   return (
     <header className="fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b border-slate-200 z-50">

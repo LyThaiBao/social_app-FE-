@@ -1,12 +1,17 @@
 'use client';
 
+import { logout } from "@/services/logout";
 import { Home, Users, MessageSquare, Settings, LogOut, Bell } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Sidebar() {
   const pathname = usePathname();
-
+  const router = useRouter();
+  async function onLogout(){
+    await logout();
+    router.replace("/auth/login")
+  }
   const menuItems = [
     { name: "Bảng tin", href: "/member", icon: Home },
     { name: "Bạn bè", href: "/member/friends", icon: Users },
@@ -46,7 +51,7 @@ export default function Sidebar() {
 
         {/* Nút Logout nằm ở dưới cùng của Sidebar */}
         <div className="pt-4 mt-4 border-t border-slate-100">
-          <button className="flex items-center gap-3 px-3 py-2.5 w-full text-slate-600 hover:bg-red-50 hover:text-red-600 rounded-lg transition-all">
+          <button onClick={onLogout} className="flex items-center gap-3 px-3 py-2.5 w-full text-slate-600 hover:bg-red-50 hover:text-red-600 rounded-lg transition-all">
             <LogOut size={20} />
             <span className="text-sm font-medium">Đăng xuất</span>
           </button>

@@ -22,7 +22,7 @@ export async function POST(request:NextRequest){
         if(!response.ok){
             return NextResponse.json({message:result.message,data:null},{status:response.status})
         }
-        const toClient = NextResponse.json({message:result.message,data:{role:result.body.role, fullName:result.body.fullName}},{status:200});
+        const toClient = NextResponse.json({message:result.message,data:{role:result.body.role, fullName:result.body.fullName,memberId:result.body.memberId}},{status:200});
         toClient.cookies.set("accessToken",result.body.accessToken,{
             httpOnly:true,
             sameSite:"lax",

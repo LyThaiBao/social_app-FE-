@@ -1,7 +1,5 @@
 import { APIResponse } from "@/types/apiResponse/APIResponse";
 import { FriendSearchResponse } from "@/types/friend/friendResponse";
-import { FriendResearchType } from "@/types/friend/searchFriend";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request:NextRequest){

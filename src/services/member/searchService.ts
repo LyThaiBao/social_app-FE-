@@ -3,7 +3,7 @@ import { RouteResponse } from "@/types/routeResponse/routeResponse"
 import { NextResponse } from "next/server";
 
 export async function searchService({keyword,token}:{keyword?:string,token:string}){
-    const url = `${process.env.FRONTEND_URL}/api/member/search?keyword=${keyword}`
+    const url = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/member/search?keyword=${keyword}`
     try{
         const response = await fetch(url,{
             method:"GET",

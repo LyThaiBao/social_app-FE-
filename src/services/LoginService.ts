@@ -1,6 +1,7 @@
 import { LoginRequestType } from "@/types/login/LoginRequest";
 import { loginResponse } from "@/types/login/loginResponse";
 import { RouteResponse } from "@/types/routeResponse/routeResponse";
+import { number } from "zod";
 
 export async function login(loginInfo:LoginRequestType){
 
@@ -19,6 +20,7 @@ export async function login(loginInfo:LoginRequestType){
             throw new Error(result.message);
         }
         console.log(">>> DATA: ",result.data)
+        localStorage.setItem("memberId",String(result.data.memberId));
         return result.data;
        }
        catch(err){

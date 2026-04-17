@@ -1,4 +1,5 @@
 "use client"
+import { FriendStatus } from "@/enums/friendStatus";
 import { sendRequest } from "@/services/friendShip/sendRequest";
 import { FriendShipDetail } from "@/types/friendShip/friendShipDetail";
 import { MeResponse } from "@/types/me/meResponse";
@@ -11,13 +12,18 @@ interface MemberProfileProps {
     birthDay: Date;
     joinDay:Date;
   },
+  me:MeResponse,
+  friendship:FriendShipDetail
+
 }
 
-export default function MemberProfileWide({ data }: MemberProfileProps) {
+export default function MemberProfileWide({ data,me,friendship }: MemberProfileProps) {
   const avatarUrl = `https://ui-avatars.com/api/?name=${data.fullName.replace(" ", "+")}&background=0D8ABC&color=fff&size=200`;
   const bd = new Date(data.birthDay);
  const jd = new Date(data.joinDay);
   const idUrSelf = Number(localStorage.getItem("memberId"));
+
+  //----------------Send request add Friend ----------------------
  async function send(){
   if(idUrSelf){
     await sendRequest({addresserId:data.id,requesterId:idUrSelf});
@@ -26,6 +32,23 @@ export default function MemberProfileWide({ data }: MemberProfileProps) {
     console.warn("ID UR SELF NOT FOUND");
   }
  }
+
+ //---------------verify relative of me and this member -----------
+
+ function verifyRelative(info:MemberProfileProps){
+
+  if(info.data.id == me.memberId){
+    return "Chỉnh Sửa"
+  }
+  if(info.friendship.id == null){
+    return "Gửi Kết Bạn"
+  }
+  console.log(">>> R: ",FriendStatus[0].toString())
+    if(info.friendship.friendShipType.toString() === FriendStatus[0].toString()){
+      return "Đã gửi yêu cầu"
+    }
+ }
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       {/* Header Profile - Trải dài toàn màn hình */}
@@ -63,7 +86,7 @@ export default function MemberProfileWide({ data }: MemberProfileProps) {
             {/* Nút hành động ở góc phải */}
             <div className="flex gap-3 mb-2 w-full md:w-auto">
               <button onClick={()=>send()} className="flex-1 md:flex-none flex items-center cursor-pointer justify-center gap-2 px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-all active:scale-95 shadow-md shadow-blue-100">
-                <UserPlus size={18} /> Kết bạn
+                <UserPlus size={18} /> {verifyRelative({data,me,friendship})}
               </button>
               <button className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-2.5 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-all active:scale-95">
                 <MessageCircle size={18} /> Nhắn tin

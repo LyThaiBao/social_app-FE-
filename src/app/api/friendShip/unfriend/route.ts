@@ -7,9 +7,8 @@ export async function POST(request:NextRequest){
     const cook = await cookies();
     const token = cook.get("accessToken")?.value;
     const info = await request.json();
-    console.log("ZOOO")
     console.log("INFOR: ",info);
-    const url = `${process.env.BACKEND_URL}/api/friendship/send`;
+    const url = `${process.env.BACKEND_URL}/api/friendship/unfriend`;
     try{
         const response = await fetch(url,{
             method:"POST",
@@ -20,6 +19,8 @@ export async function POST(request:NextRequest){
             body:JSON.stringify(info)
         })
         const result:APIResponse<FriendShipResponse> = await response.json();
+        console.log(">> RE: ",response);
+        console.log(">>RESULT: ",result)
         if(!response.ok){
             return NextResponse.json({message:result.message, data:null},{status:response.status});
         }

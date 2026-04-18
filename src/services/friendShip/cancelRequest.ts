@@ -1,10 +1,9 @@
 import { FriendShipRequest, FriendShipResponse } from "@/types/friendShip/sendRequest";
 import { RouteResponse } from "@/types/routeResponse/routeResponse";
 
-export async function sendRequest(request:FriendShipRequest){
-    const url = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/friendShip/send`;
+export async function cancelRequest(request:FriendShipRequest){
+    const url = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/friendShip/cancel`;
     // console.log(">>>URL: ",url)
-    console.log(">>REQUEST: ",request);
     try{
         const response = await fetch(url,{
             method:"POST",

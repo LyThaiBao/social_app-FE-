@@ -15,7 +15,7 @@ export default function Sidebar() {
   const menuItems = [
     { name: "Bảng tin", href: "/member", icon: Home },
     { name: "Bạn bè", href: "/member/friends", icon: Users },
-    { name: "Tin nhắn", href: "/member/messages", icon: MessageSquare },
+    { name: "Tin nhắn", href: "/member/chat", icon: MessageSquare },
     { name: "Thông báo", href: "/member/notifications", icon: Bell },
     { name: "Cài đặt", href: "/member/settings", icon: Settings },
   ];

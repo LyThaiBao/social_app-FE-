@@ -4,9 +4,9 @@ import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request:NextRequest,params:{params:Promise<{id:string}>}){
-    console.log(">>> I GOt HERE")
+    // console.log(">>> I GOt HERE")
     const id = (await params.params).id;
-    console.log(">>ID: ",id)
+    // console.log(">>ID: ",id)
     const url = `${process.env.BACKEND_URL}/api/members/${id}`;
     const cook = await cookies();
     const token = cook.get("accessToken")?.value;
@@ -17,7 +17,7 @@ export async function GET(request:NextRequest,params:{params:Promise<{id:string}
                 Authorization:`Bearer ${token}`
             },
         })
-        console.log(">>> Response: ",response)
+        // console.log(">>> Response: ",response)
         const result:APIResponse<MemberResponseType> = await response.json();
         if(!response.ok){
             return NextResponse.json({message:result.message,data:null},{status:response.status});

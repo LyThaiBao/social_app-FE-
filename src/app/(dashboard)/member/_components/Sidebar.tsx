@@ -21,7 +21,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="hidden md:block w-64 sticky top-20 h-[calc(100vh-80px)]">
+    <aside className="hidden md:block w-64 sticky top-20 h-[calc(100vh-80px)] z-10">
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-3 h-full flex flex-col">
         <nav className="flex-1 space-y-1">
           <p className="text-[10px] font-bold text-slate-400 uppercase px-3 mb-4 tracking-widest">

@@ -19,7 +19,7 @@ export default async  function ChatPage(){
             type={conv.type}
             id={conv.conversationId}
             // avatar={conv.conversationAvatar}
-            // lastMessage={conv.lastMessage} // Cái này thêm sau
+            // lastMessage={conv.lastMessage} 
           />
         ))}
       </div>

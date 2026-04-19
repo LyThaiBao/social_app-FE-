@@ -14,7 +14,7 @@ export default function MemberLayout({
         {/* Sidebar đã được tách ra */}
         <Sidebar />
 
-        <main className="flex-1 pb-10">
+        <main className="flex-1 pb-10 ">
           {children}
         </main>
       </div>

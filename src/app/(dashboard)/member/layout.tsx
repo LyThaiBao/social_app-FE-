@@ -1,5 +1,8 @@
+"use client"
+import { useState } from "react";
 import Header from "./_components/Header";
 import Sidebar from "./_components/Sidebar";
+import { Menu } from "lucide-react";
 
 
 export default function MemberLayout({
@@ -7,13 +10,19 @@ export default function MemberLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   return (
     <div className="min-h-screen bg-[#f8fafc]">
+      <div className={isSidebarOpen?"fixed inset-0 bg-black opacity-50 z-5":""}></div>
       <Header />
       <div className="max-w-10xl mx-auto pt-20 px-4 flex gap-6">
-        {/* Sidebar đã được tách ra */}
-        <Sidebar />
-
+        
+       <div className={`fixed lg:relative z-40 w-64 transition-transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-[100vw]"} lg:translate-x-0`}>
+          <Sidebar setSideBar={setIsSidebarOpen} />
+        </div>
+        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 absolute top-15 lg:hidden bg-white rounded-lg shadow ">
+          <Menu size={24} />
+        </button>
         <main className="flex-1 pb-10 ">
           {children}
         </main>

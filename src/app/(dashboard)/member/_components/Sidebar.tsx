@@ -1,11 +1,12 @@
 'use client';
 
 import { logout } from "@/services/logout";
-import { Home, Users, MessageSquare, Settings, LogOut, Bell } from "lucide-react";
+import { Home, Users, MessageSquare, Settings, LogOut, Bell, XIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { Dispatch, SetStateAction } from "react";
 
-export default function Sidebar() {
+export default function Sidebar({setSideBar}:{setSideBar:(isOpen:boolean)=>void}) {
   const pathname = usePathname();
   const router = useRouter();
   async function onLogout(){
@@ -21,12 +22,17 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="hidden md:block w-64 sticky top-20 h-[calc(100vh-80px)] z-10">
+    <aside className={` lg:block w-64 sticky top-20 h-[calc(100vh-80px)] z-10`}>
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-3 h-full flex flex-col">
         <nav className="flex-1 space-y-1">
-          <p className="text-[10px] font-bold text-slate-400 uppercase px-3 mb-4 tracking-widest">
+          <div className="flex justify-between items-center">
+            <p className="text-[10px] font-bold text-slate-400 uppercase px-3  tracking-widest">
             Menu chính
           </p>
+          <button onClick={()=>setSideBar(false)} className="text-red-500 md:hidden cursor-pointer">
+            <XIcon/>
+          </button>
+          </div>
           
           {menuItems.map((item) => {
             const Icon = item.icon;

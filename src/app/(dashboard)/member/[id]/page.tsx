@@ -5,7 +5,6 @@ import { getMe } from "@/services/me/getMeService";
 import { getByBothId } from "@/services/friendShip/getBothId";
 
 export default async function ProfileMember({params}:{params:Promise<{id:string}>}){
-    // console.log("RE RENDER")
     const cook = cookies();
     const token = (await cook).get("accessToken")?.value||"";
     const id = (await params).id;

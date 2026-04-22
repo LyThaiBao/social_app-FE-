@@ -13,7 +13,6 @@ interface ConversationItemProps {
 }
 
 export default function ConversationItem({ name, lastMessage, isActive,type,id }: ConversationItemProps) {
-    console.log("KEY>>>",id)
     const router = useRouter();
     function onChat(){
         let url= "chat/";
@@ -41,7 +40,6 @@ export default function ConversationItem({ name, lastMessage, isActive,type,id }
         </p>
       </div>
 
-      {/* Badge/Time (nếu cần) */}
       <div className="text-xs text-gray-400">10:30</div>
     </div>
   );

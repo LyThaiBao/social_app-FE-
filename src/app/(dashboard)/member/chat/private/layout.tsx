@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";      
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
+import {Send} from "lucide-react"
 export default function PrivateChatPage({ children }: { children: React.ReactNode}) {
 
   const params  = useParams();
@@ -32,16 +33,16 @@ export default function PrivateChatPage({ children }: { children: React.ReactNod
         {children}
       </main>
 
-      <footer className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-[0_-2px_5px_rgba(0,0,0,0.05)]">
+      <footer className={`fixed bottom-0 left-0  right-0 p-4 bg-white border-t border-gray-200 shadow-[0_-2px_5px_rgba(0,0,0,0.05)]`}>
         <form onSubmit={handleSubmit(onSend)} className="flex items-center gap-2 max-w-4xl mx-auto">
           <input 
             type="text" 
             placeholder="Nhập tin nhắn..." 
             {...register("message")}
-            className="flex-1 px-4 py-3 text-black bg-gray-100 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="lg:ml-50  flex-1 px-4 py-3 text-black bg-gray-100 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <button className="px-6 py-3 bg-blue-600 text-white rounded-2xl font-semibold hover:bg-blue-700 transition">
-            Gửi
+          <button className="px-6 py-3 flex gap-2 items-center bg-blue-600 text-white rounded-2xl font-semibold hover:bg-blue-700 transition">
+            <Send/> Gửi
           </button>
         </form>
       </footer>

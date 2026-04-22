@@ -9,7 +9,7 @@ export default async  function ChatPage(){
     console.log(">>>CON: ",conversations)
      return (
     <div className=" mx-auto h-screen bg-white border-r border-gray-300 p-4">
-      <h2 className="text-2xl font-bold mb-6 px-2">Đoạn chat</h2>
+      <h2 className="text-2xl font-bold mb-6 px-2 text-black">Đoạn chat</h2>
       
       <div className="space-y-2">
         {conversations.map((conv) => (

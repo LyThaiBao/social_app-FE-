@@ -1,5 +1,6 @@
   "use client"
   import { FriendStatus } from "@/enums/friendStatus";
+import { findOrCreateConversation } from "@/services/conversation/findOrCreateConversation";
   import { acceptRequest } from "@/services/friendShip/accept";
   import { cancelRequest } from "@/services/friendShip/cancelRequest";
   import { denieRequest } from "@/services/friendShip/denie";
@@ -8,7 +9,7 @@
   import { FriendShipDetail } from "@/types/friendShip/friendShipDetail";
   import { FriendShipRequest } from "@/types/friendShip/sendRequest";
   import { MeResponse } from "@/types/me/meResponse";
-  import { Calendar, IdCard, Mail, MapPin,TicketX,Handshake, User, MessageCircle, UserPlus,UserPen,UserMinus,MessageCircleX } from "lucide-react";
+  import { Calendar, IdCard, TicketX,Handshake, User, MessageCircle, UserPlus,UserPen,UserMinus,MessageCircleX } from "lucide-react";
   import { useRouter } from "next/navigation";
   interface MemberProfileProps {
     data: {
@@ -55,11 +56,13 @@
     router.push("me")
   }
 
-  function onChat(){
-    router.push(`chat/private/${data.id}`)
+  async function onChat(){
+    // kiem tra xem co conversation chua, neu chua thì tao moi --> navigation
+    const cvn = await findOrCreateConversation({partnerId:data.id})
+    router.push(`chat/private/${cvn.conversationId}`)
   }
 
-  //---------------verify relative of me and this member -----------
+  //---------------verify relative of me and this member -----------navigation
   //data: this user
   //me: current login user 
   
@@ -133,9 +136,9 @@
                 />
               </div>
 
-              {/* Tên và thông tin nhanh */}
+            
               <div className="flex-1 mb-2">
-                <h1 className="text-3xl font-bold text-gray-900">{data.fullName}</h1>
+                <h1 className="text-3xl font-bold  text-gray-900">{data.fullName}</h1>
                 <div className="flex flex-wrap gap-4 mt-2 text-gray-500 text-sm">
                   <span className="flex items-center gap-1">
                     <IdCard size={16} /> ID: {data.id}
@@ -192,9 +195,9 @@
                 </button>
               }
                 
-                <button onClick={()=>onChat()} className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-2.5 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-all active:scale-95">
+              {relative === "Hủy kết bạn" &&   <button onClick={()=>onChat()} className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-2.5 bg-gray-100 text-gray-700 font-semibold rounded-xl hover:bg-gray-200 transition-all active:scale-95">
                   <MessageCircle size={18} /> Nhắn tin
-                </button>
+                </button>}
               </div>
             </div>
           </div>

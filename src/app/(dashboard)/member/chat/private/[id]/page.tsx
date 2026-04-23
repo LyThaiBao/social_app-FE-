@@ -4,22 +4,38 @@ import HeaderChat from "../_components/HeaderChat";
 import { ChatContext } from "@/context/ChatProvider";
 import { ConversationResponse } from "@/types/conversation/conversationResponse";
 import { getConversation } from "@/services/conversation/getConversation";
+import { getMessageByConversationId } from "@/services/messages/getMessagesByCvnId";
 
 export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: string }> }) {
     
     const [conversationId,setConversationId] = useState<string>("");
     const [conversation,setConversation] = useState<ConversationResponse>();
+      const [messages, setMessages] = useState<any[]>([]);
     const scrollRef = useRef<HTMLDivElement>(null);
     //----------------GET PARAMS----------------
     useEffect(()=>{
         (async()=>{
             const conversationIdLocal = (await params).id;
-            setConversationId(conversationIdLocal);
+            console.log("PARAM >>>",conversationIdLocal)
+                setConversationId(conversationIdLocal);
         })()
     },[])
+
+    //---------GET MESSAGE--------------
+
+    useEffect(()=>{
+        (async ()=>{
+              if (!conversationId || conversationId === "0") return;
+            const oldMessage = await getMessageByConversationId({conversationId:Number(conversationId)})
+            console.log("LOG OLD MESS")
+            setMessages([...oldMessage])
+        })()
+    },[conversationId])
+
     //----------Conversation------------
     useEffect(()=>{
         (async()=>{
+            if (!conversationId || conversationId === "0") return;
             const id = Number(conversationId);
             const result = await getConversation({id})
             setConversation(result);
@@ -29,7 +45,7 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
     
     console.log(">>>CONVER: ",conversation)
     const client = useContext(ChatContext);
-    const [messages, setMessages] = useState<any[]>([]);
+  
     const currentId = localStorage.getItem("memberId");
     useEffect(() => {
         scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -64,10 +80,10 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
                 }`}>
                     <p className="text-sm">{m.content}</p>
                 </div>
-                <div ref={scrollRef} className="mb-2" />
             </div>
         );
     })}
+    <div ref={scrollRef} className="mb-2" />
 </div>
         </div>
     );

@@ -21,6 +21,5 @@ export async function getMessageByConversationId({conversationId}:{conversationI
     }
     catch(err){
         throw err;
-
     }
 }

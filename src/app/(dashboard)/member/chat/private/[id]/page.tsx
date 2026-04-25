@@ -43,7 +43,7 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
     },[conversationId])
 
     
-    console.log(">>>CONVER: ",conversation)
+    // console.log(">>>CONVER: ",conversation)
     const client = useContext(ChatContext);
   
     const currentId = localStorage.getItem("memberId");
@@ -56,14 +56,14 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
         if (!client?.connected || !conversationId) return;
         const sub = client.subscribe(`/queue/private-${conversationId}`,(msg)=>{
             const newMsg = JSON.parse(msg.body)
-            console.log("MS >>>",newMsg);
+            // console.log("MS >>>",newMsg);
             setMessages(pre=>[...pre,newMsg]);
         })
 
         return () => sub.unsubscribe();
     },[client,conversationId]);
 
-    console.log("MESSAGE: ",messages)
+    // console.log("MESSAGE: ",messages)
     return (
         <div className="flex flex-col h-[calc(100vh-160px)]"> {/* 160px là chiều cao navbar+input chat+pading,...*/}
             <HeaderChat partnerName={conversation?conversation.conversationName:"User"} />

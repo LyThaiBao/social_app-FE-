@@ -23,7 +23,7 @@ export default function MemberLayout({
         <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 absolute top-15 lg:hidden bg-white rounded-lg shadow ">
           <Menu size={24} />
         </button>
-        <main className="flex-1 pb-10 ">
+        <main className="flex-1 pb-10  h-[calc(100%-63px)]">
           {children}
         </main>
       </div>

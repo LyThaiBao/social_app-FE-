@@ -1,7 +1,7 @@
 import { ConversationResponse } from "@/types/conversation/conversationResponse"
 import { RouteResponse } from "@/types/routeResponse/routeResponse"
 
-export async function getConversations({token}:{token:string}){
+export async function getConversations({token,next}:{token:string,next:any}){
     const url = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/conversation`
     try{
         const response = await fetch(url,{

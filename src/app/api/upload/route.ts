@@ -1,13 +1,23 @@
 import { APIResponse } from "@/types/apiResponse/APIResponse";
+import { UploadResponse } from "@/types/upload/uploadResponse";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request:NextRequest){
+
+    console.log(">>> SIGNAL: ",request.signal)
+    if (request.signal.aborted) {
+       return NextResponse.json({ message: "Request aborted",data:null ,isSuccess: false   }, { status: 499 });
+   }
     const formData = await request.formData();
+     if (request.signal.aborted) {
+       return NextResponse.json({ message: "Request aborted",data:null ,isSuccess: false   }, { status: 499 });
+   }
     const file = formData.get("file");
     if(!file){
         return NextResponse.json({ message: "No file provided", data: null, isSuccess: false }, { status: 400 });
     }
+
     const url = `${process.env.BACKEND_URL}/api/cloud/upload`;
     const cook = await cookies();
     const token = cook.get("accessToken")?.value;
@@ -20,10 +30,11 @@ export async function POST(request:NextRequest){
                 // Trình duyệt/Fetch sẽ tự động tạo Header kèm 'boundary' cho.
                 Authorization:`Bearer ${token}`
             },
-            body:beFormData
+            body:beFormData,
+            signal:request.signal
         })
         
-        const result:APIResponse<string> = await response.json();
+        const result:APIResponse<UploadResponse> = await response.json();
         if(!response.ok){
             return NextResponse.json({message:result.message, data:null,isSuccess:false},{status:response.status});
         }

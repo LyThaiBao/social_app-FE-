@@ -8,11 +8,12 @@ interface ConversationItemProps {
   id:number;
 //   avatar: string;
   lastMessage?: string;
+  lastTime?:string;
   isActive?: boolean;
   type:ConversationType;
 }
 
-export default function ConversationItem({ name, lastMessage, isActive,type,id }: ConversationItemProps) {
+export default function ConversationItem({ name, lastMessage,lastTime, isActive,type,id }: ConversationItemProps) {
     const router = useRouter();
     function onChat(){
         let url= "chat/";
@@ -40,7 +41,7 @@ export default function ConversationItem({ name, lastMessage, isActive,type,id }
         </p>
       </div>
 
-      <div className="text-xs text-gray-400">10:30</div>
+      <div className="text-xs text-gray-400">{lastTime||"few sec"}</div>
     </div>
   );
 }

@@ -6,5 +6,6 @@ export interface MessageResponse{
     conversationId:number;
     senderId:number;
     senderName:string;
+    sentTime:string;
     messageType:MessageType;
 }

@@ -15,6 +15,7 @@ export default function PrivateChatPage({ children }: { children: React.ReactNod
   const router = useRouter();
   const params  = useParams();
   const {register,handleSubmit,formState:{errors},reset,setValue,getValues} = useForm<ChatType>({resolver:zodResolver(SchemaChat)});
+  //  take context 
   const client = useContext(ChatContext);
   const [isUploading,setIsUploading] = useState<boolean>(false);
   const [media,setMedia] = useState<UploadResponse|null>(null);
@@ -59,7 +60,7 @@ export default function PrivateChatPage({ children }: { children: React.ReactNod
   }
 
   async function onSend(mess:ChatType){
-console.log(">>> MEDIA: ",media);
+  console.log(">>> MEDIA: ",media);
      if(client && client.connected){
       client.publish({
         destination:"/app/chat.private",
@@ -81,6 +82,19 @@ console.log(">>> MEDIA: ",media);
     }
     reset();
   }
+
+  async function onTyping(){
+    console.log("TYPE",params.id)
+   if(client && client.connected){
+    client.publish({
+      destination:`/app/public.type.${params.id}`,
+      body:JSON.stringify({
+        type:"Typing...",
+        senderId:localStorage.getItem("memberId")
+      })
+    })
+   }
+  }
   return (
     <div className="flex flex-col h-full bg-gray-50 "> 
       <main className="flex-1  p-4">
@@ -90,6 +104,12 @@ console.log(">>> MEDIA: ",media);
       <footer className={`fixed bottom-0 left-0  right-0 p-4 bg-white border-t border-gray-200 shadow-[0_-2px_5px_rgba(0,0,0,0.05)]`}>
         <form onSubmit={handleSubmit(onSend)} className="flex items-center gap-2 max-w-4xl mx-auto">
     {/*  */}
+     {getValues("file") && 
+    <div  className="text-blue-500 truncate line-clamp-1">
+      <button className="text-black p-4" onClick={onCancelUpload}>Huy chon</button>
+      <span>Đã chọn: {getValues("file")?.name}</span>  
+    </div>}
+    
     <label className={`cursor-pointer p-2 rounded-xl transition ${isUploading ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-100"}`}>
       <input 
         type="file" 
@@ -97,12 +117,6 @@ console.log(">>> MEDIA: ",media);
         onChange={onChangeFile} 
         // disabled={isUploading} 
       />
-     {getValues("file") && 
-    <div>
-      <button className="text-black p-4" onClick={onCancelUpload}>Huy chon</button>
-      <span className="text-blue-500">Đã chọn: {getValues("file")?.name}</span>  
-    </div>}
-    
     📎
 
     </label>
@@ -110,6 +124,7 @@ console.log(">>> MEDIA: ",media);
             type="text" 
             placeholder="Nhập tin nhắn..." 
             {...register("message")}
+             onClick={onTyping}
             className="  flex-1 px-4 py-3 text-black bg-gray-100 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
          <button 

@@ -29,7 +29,7 @@ export default function Sidebar({setSideBar}:{setSideBar:(isOpen:boolean)=>void}
             <p className="text-[10px] font-bold text-slate-400 uppercase px-3  tracking-widest">
             Menu chính
           </p>
-          <button onClick={()=>setSideBar(false)} className="text-red-500 md:hidden cursor-pointer">
+          <button onClick={()=>setSideBar(false)} className="text-red-500 lg:hidden cursor-pointer">
             <XIcon/>
           </button>
           </div>

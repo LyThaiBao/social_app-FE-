@@ -1,4 +1,4 @@
-import { ConversationType } from "@/enums/conversationType";
+
 import { ConversationResponse } from "@/types/conversation/conversationResponse";
 import { LastMessageResponse } from "@/types/message/lastMessageResponse";
 import ConversationItem from "./ConversationItem";
@@ -12,7 +12,8 @@ export default function ConversationList({conversations}:{conversations:(Convers
             type={conv.type}
             id={conv.conversationId}
             // avatar={conv.conversationAvatar}
-            lastMessage={conv.lastMessage?.content} 
+            lastMessage={conv.lastMessage?.content || conv.lastMessage?.messageType} 
+            lastTime={conv.lastMessage?.lastTime}
           />
         ))}
       </div>

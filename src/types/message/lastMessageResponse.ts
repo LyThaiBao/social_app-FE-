@@ -1,4 +1,7 @@
+import { MessageType } from "@/enums/messageType";
+
 export interface LastMessageResponse{
     content:string;
-    // lastTime:Date;
+    messageType:MessageType;
+    lastTime:string;
 }

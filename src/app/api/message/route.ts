@@ -18,6 +18,7 @@ export async function POST(request:NextRequest){
             },
             body:JSON.stringify(info)
         })
+        console.log(">>> RESPONSE: ",response);
         const result:APIResponse<MessageResponse[]> = await response.json();
 
         if(!response.ok){

@@ -7,6 +7,8 @@ import { createContext, useEffect, useState } from "react"
 
 export const ChatContext = createContext<Client | null>(null);
 
+
+//-------------Hand shake-------------
 export function ChatProvider({children}:{children:React.ReactNode}){
     const [client,setClient] = useState<Client | null>(null);
     

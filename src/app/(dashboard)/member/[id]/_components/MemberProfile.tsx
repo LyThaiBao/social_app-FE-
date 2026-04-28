@@ -63,9 +63,8 @@ import { findOrCreateConversation } from "@/services/conversation/findOrCreateCo
   }
 
   //---------------verify relative of me and this member -----------navigation
-  //data: this user
+  //data: this profile member
   //me: current login user 
-  
       // PENDING,
       // DENIED,
       // ACCEPTED

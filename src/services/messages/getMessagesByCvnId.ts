@@ -13,7 +13,7 @@ export async function getMessageByConversationId({conversationId}:{conversationI
             body:JSON.stringify({conversationId:conversationId}) 
         })
         const result:RouteResponse<MessageResponse[]> = await response.json();
-
+        console.log("RESULT >>>",result)
         if(!response.ok){
             throw new Error(result.message);
         }

@@ -3,7 +3,9 @@ import { MessageType } from "@/enums/messageType";
 export interface MessageResponse{
     id:number;
     content:string;
+    messageType:MessageType;
     mediaUrl:string;
+    mediaType:string;
     conversationId:number;
     senderId:number;
     senderName:string;
@@ -12,5 +14,4 @@ export interface MessageResponse{
     parentMessageContent:string|null;
     parentMessageSenderName:string|null;
     parentMediaType:MessageType;
-    messageType:MessageType;
 }

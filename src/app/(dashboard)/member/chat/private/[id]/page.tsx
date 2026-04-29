@@ -114,6 +114,18 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
         }
     },[client,conversationId])
 
+    //-----------------_---Recall------------------
+    useEffect(()=>{
+        if(!client?.connected || !conversationId) return;
+        client.subscribe(`/queue/recall-${conversationId}`,(msg)=>{
+            const recalledMSG:MessageResponse = JSON.parse(msg.body);
+        //   const msgUpdated = messages;
+        //   console.log("ALL MSG: ",messages);
+        setMessages(pre => pre.map((m)=>m.id == recalledMSG.id? recalledMSG: m))
+         
+        console.log("RECALLED: ",msg);
+        })
+    },[client,conversationId])
     
 
 
@@ -215,7 +227,17 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
         setReplyMessage(m);
         setFocus("message")
     }
-    
+    // -----onDelete------
+    function onDelete(m:MessageResponse){
+        if(client && client.connected){
+            client.publish({
+                destination:`/app/chat.recall`,
+                body:JSON.stringify({
+                    id:m.id
+                })
+            })
+        }
+    }
 
   
     return (
@@ -230,12 +252,11 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
         
         return ( // ------------------------Show Message ------------------------------------
             <div key={index} className={`flex ${isMyMessage ? "justify-end" : "justify-start"}  mb-4 group `}>
-                {m.parentId && (
+                {m.parentId && m.messageType != MessageType.RECALLED && (
                 <div onClick={() => {
                 const el = document.getElementById(`${m.parentId}`);
                 if (el) {
                 el.scrollIntoView({ behavior: "smooth", block: "center" });
-                // Hiệu ứng "nhấp nháy" nhẹ để người dùng biết tin nhắn nào là tin nhắn gốc
                 el.classList.add("ring-2", "ring-blue-500");
                 setTimeout(() => el.classList.remove("ring-2", "ring-blue-500"), 1500);
             }
@@ -244,7 +265,7 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
                         {m.parentMessageSenderName || "Người dùng"}
                     </div>
                     <p className="text-gray-700 truncate italic">
-                            {m.parentMessageContent  || m.parentMediaType ||"Tin nhắn đã bị thu hồi hoặc không tồn tại"}
+                            { m.parentMessageContent  || m.parentMediaType }
                     </p>
                 </div>
 )}
@@ -254,32 +275,36 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
                         Detail
                     </button>
 
+                    {m.messageType != MessageType.RECALLED &&
                     <button  onClick={()=>onReply(m)}>
                         <Reply size={15} className="inline mr-1"/>
                         Reply
-                    </button>
+                    </button>}
 
-                        <button onClick={()=>onReply(m)}>
+                    {m.messageType != MessageType.RECALLED && isMyMessage &&
+                    <button onClick={()=>onDelete(m)}>
                         <Trash2 size={15} className="inline mr-1"/>
                         Delete
                     </button>
+                    }
                 </div>
+
                 <div className="max-w-[70%]" id={`${m.id}`}>
-                    {m.messageType == MessageType.RECALLED && <div className="text-black border-1 p-2">Tin nhắn đã bị thu hồi</div>}
-                    {m.content &&  m.messageType != MessageType.RECALLED &&
+                    
                     <div className={` p-3 rounded-2xl shadow-sm ${isMyMessage ? "bg-blue-500 text-white rounded-br-none" : "bg-gray-100 text-black rounded-bl-none"}`}>
-                        <p className="text-sm ">{m.content}</p>
-                    </div>}
+                        <p className="text-md ">{m.messageType == MessageType.RECALLED ? "Tin nhắn đã bị thu hồi" : m.content}</p>
+                        <small className="text-[10px]">{m.sentTime}</small>
+                    </div>
                     {/* Media */}
-                    {m.mediaType == MediaType.IMAGE && 
+                    {m.mediaType == MediaType.IMAGE && m.messageType != MessageType.RECALLED &&
                     <div className="relative border-1">
                         <img src={m.mediaUrl} onLoad={()=>{scrollRef.current?.scrollIntoView({behavior:"smooth"})}}></img>
                         <button onClick={()=>handleDownload(m.mediaUrl,"picture")} className="absolute text-black top-10 right-10">
                             Tai xuong
                         </button>
                     </div>}
-                    {m.mediaType == MediaType.VIDEO && <video onLoadedData={()=>{scrollRef.current?.scrollIntoView({behavior:"smooth"})}} controls src={m.mediaUrl}></video>}
-                    {m.mediaType == MediaType.FILE && 
+                    {m.mediaType == MediaType.VIDEO && m.messageType != MessageType.RECALLED && <video onLoadedData={()=>{scrollRef.current?.scrollIntoView({behavior:"smooth"})}} controls src={m.mediaUrl}></video>}
+                    {m.mediaType == MediaType.FILE && m.messageType != MessageType.RECALLED &&
                     <button onClick={()=>handleDownload(m.mediaUrl,"fileName")}  className="text-black">
                         <File/>
                         Tai File

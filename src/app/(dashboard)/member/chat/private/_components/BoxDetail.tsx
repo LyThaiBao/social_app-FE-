@@ -1,3 +1,4 @@
+import { MessageType } from "@/enums/messageType"
 import { MessageResponse } from "@/types/message/messageResponse"
 
 
@@ -24,7 +25,7 @@ export default function BoxDetail({setBoxDetail,messageDetail}:BoxDetailProps){
                         <div className="flex items-center gap-3 bg-[#fff] p-2 rounded-lg border border-gray-800">
                             <div className="border-l-2 border-blue-500 h-10"></div>                            
                             <p className="text-sm text-black truncate w-[400px]">
-                               {messageDetail?.content|| messageDetail?.mediaUrl}
+                               {messageDetail?.messageType ==MessageType.RECALLED ? "Tin nhắn đã bị thu hồi" :messageDetail?.content|| messageDetail?.mediaUrl}
                             </p>
                         </div>
                         <div className="text-right text-xs text-gray-500 pt-2 flex items-center justify-end gap-1">

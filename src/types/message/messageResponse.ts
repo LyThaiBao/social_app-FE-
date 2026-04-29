@@ -12,6 +12,7 @@ export interface MessageResponse{
     sentTime:string;
     parentId:number|null;
     parentMessageContent:string|null;
+    parentMessageType:MessageType|null;
     parentMessageSenderName:string|null;
     parentMediaType:MessageType;
 }

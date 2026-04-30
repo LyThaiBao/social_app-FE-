@@ -1,18 +1,26 @@
 "use client"
-import React, { useContext, useEffect } from "react";
-import { ChatContext } from "./ChatProvider";
+import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { useChatContext } from "@/hooks/useChatContext";
 
+interface props{
+    not:()=>void;
+} 
 
+const Notification = createContext<props|null>(null);
 export function NotificationProvider({children}:{children:React.ReactNode}){
-    const client = useContext(ChatContext);
 
-    useEffect(()=>{
-        if(!client?.connected) return ;
-        const sub = client.subscribe(`user/queue/notificationa`,(msg) => {
-            console.log("MES >>> ",msg);
+    const {client} = useChatContext();
+
+   
+        const not = ()=>{
+            if(!client?.connected) return "chua connect" ;
+            console.log("PREPARE NOTIFICATION >>> ");
+            const sub = client.subscribe(`/queue/notification`,(msg) => {
+            console.log("NOTIFICATION >>> ",msg);
+            const content = JSON.parse(msg.body);
+            return content;
         })
-        return () => sub.unsubscribe();
-    },[client])
+        }
 
-    return <>{children}</>
+    return <Notification.Provider value={{not}}>{children}</Notification.Provider>
 }

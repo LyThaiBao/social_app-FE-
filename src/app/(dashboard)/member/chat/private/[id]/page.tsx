@@ -1,7 +1,6 @@
 "use client"
 import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import HeaderChat from "../_components/HeaderChat";
-import { ChatContext } from "@/context/ChatProvider";
 import { ConversationResponse } from "@/types/conversation/conversationResponse";
 import { getConversation } from "@/services/conversation/getConversation";
 import { getMessageByConversationId } from "@/services/messages/getMessagesByCvnId";
@@ -21,6 +20,8 @@ import { ChatEnum } from "@/enums/chatEnum";
 import { handleDownload } from "@/utils/download";
 import Typing from "../_components/Typing";
 import { MediaType } from "@/enums/mediaType";
+import BlankChat from "./_components/BlankChat";
+import { useChatContext } from "@/hooks/useChatContext";
 
 export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: string }> }) {
     const [currentId,setCurrentId] = useState<string|null>(null)
@@ -32,9 +33,10 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
     const [replyMessage,setReplyMessage]= useState<MessageResponse|null>(null);
 
     //----------------Client handShaked-------------------
-        const client = useContext(ChatContext);
+        // const client = useContext(ChatContext);
+      
     //----------------------------------------------------
-    
+        const context = useChatContext();
     
     //----------------GET Conversation ID----------------
     useEffect(()=>{
@@ -77,22 +79,23 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
     }, [messages,conversationId]);
 
     // ---------------Sub convesation -------------------------------
+   
     useEffect(()=>{
         // just sub when had  client and  partnerId
-        if (!client?.connected || !conversationId) return;
-        const sub = client.subscribe(`/queue/private-${conversationId}`,(msg)=>{
+        if (!context.client || !context.client.connected) return;
+        const sub = context.client.subscribe(`/queue/private-${conversationId}`,(msg)=>{
             console.log("NEW MSG: ",msg)
             const newMsg = JSON.parse(msg.body)
             setMessages(pre=>[...pre,newMsg]);
         })
         return () => sub.unsubscribe();
-    },[client,conversationId]);
+    },[context.client,conversationId]);
 
     //---------------- Typing-----------------
     const timeoutRef = useRef<NodeJS.Timeout|null>(null);
     useEffect(()=>{
-        if(!client?.connected || !conversationId) return;
-        const sub = client.subscribe(`/topic/type.${conversationId}`,(msg)=>{
+        if(!context.client?.connected || !conversationId) return;
+        const sub = context.client.subscribe(`/topic/type.${conversationId}`,(msg)=>{
             const result = JSON.parse(msg.body);
             const typingId = result.senderId;
         
@@ -112,20 +115,28 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
                 clearTimeout(timeoutRef.current);
             }
         }
-    },[client,conversationId])
+    },[context.client,conversationId])
 
     //-----------------_---Recall------------------
     useEffect(()=>{
-        if(!client?.connected || !conversationId) return;
-        client.subscribe(`/queue/recall-${conversationId}`,(msg)=>{
+        if(!context.client?.connected || !conversationId) return;
+       context.client.subscribe(`/queue/recall-${conversationId}`,(msg)=>{
             const recalledMSG:MessageResponse = JSON.parse(msg.body);
         //   const msgUpdated = messages;
         //   console.log("ALL MSG: ",messages);
-        setMessages(pre => pre.map((m)=>m.id == recalledMSG.id? recalledMSG: m))
+        setMessages(pre => pre.map((m)=>{
+            if(m.id == recalledMSG.id){
+                return recalledMSG;
+            }
+            if(m.parentId == recalledMSG.id){
+                return {...m,parentMessageType:MessageType.RECALLED}
+            }
+            return m;
+        }))
          
         console.log("RECALLED: ",msg);
         })
-    },[client,conversationId])
+    },[context.client,conversationId])
     
 
 
@@ -176,9 +187,10 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
     setValue("file",undefined);
   }
 
+  //--------------------Public still work here -------------------------------
   async function onSend(mess:ChatType){
-     if(client && client.connected){
-      client.publish({
+     if(context.client && context.client.connected){
+      context.client.publish({
         destination:"/app/chat.private",
         body:JSON.stringify({
           content:mess.message,
@@ -193,7 +205,7 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
       })
       setValue("file",undefined);
       setMedia(null);
-      router.refresh();// refresh lai SC 
+    //   router.refresh();// refresh lai SC 
       //------------Case reply-----------
       setReplyMessage(null);
     }
@@ -204,8 +216,8 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
   }
 
   async function onTyping(){
-   if(client && client.connected){
-    client.publish({
+   if(context.client && context.client.connected){
+    context.client.publish({
       destination:`/app/public.type.${conversationId}`,
       body:JSON.stringify({
         type:"Typing...",
@@ -229,8 +241,8 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
     }
     // -----onDelete------
     function onDelete(m:MessageResponse){
-        if(client && client.connected){
-            client.publish({
+        if(context.client && context.client.connected){
+            context.client.publish({
                 destination:`/app/chat.recall`,
                 body:JSON.stringify({
                     id:m.id
@@ -239,19 +251,20 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
         }
     }
 
-  
+
     return (
         <div className="flex flex-col h-[calc(100vh-210px)]"> {/* 210px là chiều cao navbar+input chat+pading,...*/}
             <HeaderChat partnerName={conversation?conversation.conversationName:"User"} />
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {/*--------------------------- Detail message ---------------------------*/}
             {isOpenBoxDetail && <BoxDetail setBoxDetail={setBoxDetail} messageDetail={messageDetail}/>}
-
-        {messages.map((m, index) => {
-        const isMyMessage = Number(currentId) == m.senderId;
+            {messages.length == 0 && <BlankChat/>}
+            {messages.map((m, index) => {
+            const isMyMessage = Number(currentId) == m.senderId;
+        
         
         return ( // ------------------------Show Message ------------------------------------
-            <div key={index} className={`flex ${isMyMessage ? "justify-end" : "justify-start"}  mb-4 group `}>
+            <div key={m.id} className={`flex ${isMyMessage ? "justify-end" : "justify-start"}  mb-4 group `}>
                 {m.parentId && m.messageType != MessageType.RECALLED && (
                 <div onClick={() => {
                 const el = document.getElementById(`${m.parentId}`);
@@ -265,7 +278,7 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
                         {m.parentMessageSenderName || "Người dùng"}
                     </div>
                     <p className="text-gray-700 truncate italic">
-                            { m.parentMessageContent  || m.parentMediaType }
+                            {m.parentMessageType == MessageType.RECALLED ? "Tin nhắn đã bị thu hồi" :  m.parentMessageContent  || m.parentMediaType }
                     </p>
                 </div>
 )}
@@ -313,7 +326,7 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
                 
             </div>
         );
-    })}
+        })}
      {/* --------------------------------------Typing---------------------------- */}
     {typing && <Typing memberName={typing.memberName}/>}
 

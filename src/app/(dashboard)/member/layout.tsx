@@ -1,8 +1,9 @@
 "use client"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./_components/Header";
 import Sidebar from "./_components/Sidebar";
 import { Menu } from "lucide-react";
+import { useChatContext } from "@/hooks/useChatContext";
 
 
 export default function MemberLayout({
@@ -10,6 +11,17 @@ export default function MemberLayout({
 }: {
   children: React.ReactNode;
 }) {
+
+  // ----------handshake after login----------
+  const context = useChatContext();
+  useEffect(()=>{
+    context.activateChat();
+
+    return () => {
+      context.deactivateChat();
+    }
+  },[])
+  
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   return (
     <div className="min-h-screen bg-[#f8fafc]">

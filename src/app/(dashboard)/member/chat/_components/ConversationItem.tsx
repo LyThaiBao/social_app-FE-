@@ -1,5 +1,6 @@
 "use client"
 import { ConversationType } from "@/enums/conversationType";
+import { useChatContext } from "@/hooks/useChatContext";
 import { MessageCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -14,6 +15,7 @@ interface ConversationItemProps {
 }
 
 export default function ConversationItem({ name, lastMessage,lastTime, isActive,type,id }: ConversationItemProps) {
+  const context = useChatContext();
     const router = useRouter();
     function onChat(){
         let url= "chat/";
@@ -29,7 +31,7 @@ export default function ConversationItem({ name, lastMessage,lastTime, isActive,
   return (
     <div onClick={()=>onChat()} className={`flex items-center gap-4 p-4 cursor-pointer transition-all duration-200 rounded-2xl 
       ${isActive ? 'bg-blue-50' : 'hover:bg-gray-300'}`}>
-      
+     {context.unRead?.conversationId == id &&  <div className="text-black" >UNREAD {context.unRead?.content}</div>}
       {/* Avatar */}
       {/* <img src={avatar} alt={name} className="w-12 h-12 rounded-full object-cover shadow-sm" /> */}
 

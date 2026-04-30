@@ -1,25 +1,37 @@
 "use client"
 
-import { Client, Stomp } from "@stomp/stompjs";
+import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client"
-import { createContext, useEffect, useState } from "react"
+import { createContext, useCallback, useState } from "react"
+import { NotificationProvider } from "./NotificationProvider";
+import { MessageResponse } from "@/types/message/messageResponse";
 
 
-export const ChatContext = createContext<Client | null>(null);
+interface ChatContextType{
+    client:Client | null;
+    activateChat: () => void;
+    deactivateChat: () => void;
+}
+export const ChatContext = createContext< ChatContextType | null>(null);
 
-
-//-------------Hand shake-------------
 export function ChatProvider({children}:{children:React.ReactNode}){
     const [client,setClient] = useState<Client | null>(null);
-    
-    useEffect(()=>{
-        const socket = new SockJS(process.env.NEXT_PUBLIC_WS_URL);
+    const [unRead,setUnRead] = useState<Record<string,number>[]|null>(null);
+    //-------------Hand shake-------------
+    const  activateChat = useCallback(() => {
+        const socket = new SockJS(process.env.NEXT_PUBLIC_WS_URL); // anten 
         const stompClient = new Client({
-            webSocketFactory: () => socket,
+            webSocketFactory: () => socket, // cam anten vao
             debug: (str) => {console.log("STOMP Debug: ",str)},
             onConnect:() => {
                 console.log(">>> Connected");
                 setClient(stompClient) // Lưu vào state để các page dùng
+
+                stompClient.subscribe(`/queue/notification`,(msg) => {
+                    const body:MessageResponse = JSON.parse(msg.body);
+                    
+                console.log("NOTIFICATION >>> ",body)
+                })
             },
             onDisconnect: () => {
                 console.log(">>> Disconnected");
@@ -30,16 +42,27 @@ export function ChatProvider({children}:{children:React.ReactNode}){
             }
         });
         //Kích hoạt kết nối
-        stompClient.activate();
+        stompClient.activate(); 
 
         //Cleanup: Khi component này bị "hủy"
         return () => {
             stompClient.deactivate();
         };
 
-    },[]);
+    },[client])
 
-    return <ChatContext.Provider value={client}>
-        {children}
+    const deactivateChat = useCallback(()=>{
+        if(client){
+            client.deactivate();
+            setClient(null);
+        }
+    },[client])
+
+    // const marskRead = ()=>{
+        
+    // }
+
+    return <ChatContext.Provider value={{client,activateChat,deactivateChat}}>
+            {children}
     </ChatContext.Provider>
 }

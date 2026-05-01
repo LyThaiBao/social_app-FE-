@@ -1,0 +1,4 @@
+export enum NotificationType{
+    NEW_MESSAGE = "NEW_MESSAGE",
+    REQUEST_FRIEND = "REQUEST_FRIEND"
+}

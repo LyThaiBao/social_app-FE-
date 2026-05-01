@@ -22,6 +22,7 @@ import Typing from "../_components/Typing";
 import { MediaType } from "@/enums/mediaType";
 import BlankChat from "./_components/BlankChat";
 import { useChatContext } from "@/hooks/useChatContext";
+import { id } from "zod/locales";
 
 export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: string }> }) {
     const [currentId,setCurrentId] = useState<string|null>(null)
@@ -31,7 +32,8 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
     const scrollRef = useRef<HTMLDivElement>(null);
     const [typing,setTyping] = useState<TypingResponse|null>(null);
     const [replyMessage,setReplyMessage]= useState<MessageResponse|null>(null);
-
+    const chatContext = useChatContext();
+   
     //----------------Client handShaked-------------------
         // const client = useContext(ChatContext);
       
@@ -46,6 +48,12 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
                 setConversationId(conversationIdLocal);
         })()
     },[])
+
+   
+
+    useEffect(()=>{
+        context.markAsRead(conversationId)
+    },[messages,conversationId])
 
     //---------GET MESSAGE OLD MSG--------------
     useEffect(()=>{

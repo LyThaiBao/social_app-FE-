@@ -3,6 +3,7 @@ import { ConversationType } from "@/enums/conversationType";
 import { useChatContext } from "@/hooks/useChatContext";
 import { MessageCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { string } from "zod";
 
 interface ConversationItemProps {
   name: string;
@@ -26,12 +27,18 @@ export default function ConversationItem({ name, lastMessage,lastTime, isActive,
             url += `public/${id}`;
         }
         router.push(url);
+        context.markAsRead(id);
+
 
     }
+
+
+   
+    const isUnread = context.unRead[id]||false;
   return (
     <div onClick={()=>onChat()} className={`flex items-center gap-4 p-4 cursor-pointer transition-all duration-200 rounded-2xl 
       ${isActive ? 'bg-blue-50' : 'hover:bg-gray-300'}`}>
-     {context.unRead?.conversationId == id &&  <div className="text-black" >UNREAD {context.unRead?.content}</div>}
+     
       {/* Avatar */}
       {/* <img src={avatar} alt={name} className="w-12 h-12 rounded-full object-cover shadow-sm" /> */}
 
@@ -39,7 +46,7 @@ export default function ConversationItem({ name, lastMessage,lastTime, isActive,
       <div className="flex-1 min-w-0">
         <h4 className="text-gray-900 font-semibold truncate">{name}</h4>
         <p className="text-gray-500 text-sm truncate">
-          {lastMessage || "Hãy bắt đầu cuộc trò chuyện..."}
+          {isUnread ? <b className="text-black">Có tin nhắn chưa đọc</b>:lastMessage || "Hãy bắt đầu cuộc trò chuyện..."}
         </p>
       </div>
 

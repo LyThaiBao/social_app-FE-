@@ -4,7 +4,7 @@
 
 import { toRelative } from "@/utils/convertTime";
 import { useRouter } from "next/navigation";
-export default function FriendRequestNotifi({senderId,senderName,sentTime}:{senderId:number,senderName:string,sentTime:string}){
+export default function FriendResponseNotifi({senderId,senderName,sentTime}:{senderId:number,senderName:string,sentTime:string}){
   
  const router = useRouter();
 
@@ -24,9 +24,9 @@ export default function FriendRequestNotifi({senderId,senderName,sentTime}:{send
         <div className="flex flex-col">
             <p className="text-sm text-gray-800">
                 <span className="font-bold text-blue-600 mr-2">{senderName}</span> 
-                đã gửi cho bạn một lời mời kết bạn.
+               đã chấp nhận lời mới kết bạn.
             </p>
-            <p  className="text-black">Mở lòng một chút đời sẽ hạnh phúc</p>
+            <p  className="text-black">Chat ngay thôi nào!</p>
             <span className="text-xs text-gray-500 mt-1">
                {toRelative(sentTime)} 
             </span>

@@ -16,7 +16,6 @@ interface ChatContextType{
     unRead:Record<string,boolean>;
     markAsRead:(id:number|string)=>void;
     //-----Friend request-----
-    friendRequest:NotificationResponse<FriendRequest>|null;
     notification:number;
 
 }
@@ -25,7 +24,6 @@ export const ChatContext = createContext< ChatContextType | null>(null);
 export function ChatProvider({children}:{children:React.ReactNode}){
     const [client,setClient] = useState<Client | null>(null);
     const [unRead,setUnRead] = useState<Record<string,boolean>>({});
-    const [friendRequest,setFriendRequest] = useState<NotificationResponse<FriendRequest>|null>(null);
     const [notification,setNotification] = useState<number>(0);
     //-------------Hand shake-------------
     const  activateChat = useCallback(() => {
@@ -50,10 +48,15 @@ export function ChatProvider({children}:{children:React.ReactNode}){
 
                          case NotificationType.REQUEST_FRIEND:
                             setNotification(pre => pre+1);
-                            const friendRequest:NotificationResponse<FriendRequest> =  body;
-                            setFriendRequest(friendRequest); // save and give for consummer compo  
-                            console.log(">>> FRIEND REQUEST: ",body)
+                            // const friendRequest:NotificationResponse<FriendRequest> =  body;
+                            // setFriendRequest(friendRequest); // save and give for consummer compo  
+                            console.log(">>> FRIEND REQUEST: ",body);
                          break;
+
+                         case NotificationType.FRIEND_ACCEPTED:
+                            setNotification(pre => pre+1);
+                            console.log(">>>FRIEND ACCEPTED: ",body);
+                         break;    
                     }
                     // console.log("NOTIFICATION >>> ",body)
                 })
@@ -87,11 +90,8 @@ export function ChatProvider({children}:{children:React.ReactNode}){
         setUnRead(pre => ({...pre,[id]:false}))
     }
 
-    const sawNotifi = () =>{
-        setNotification(0);
-    }
 
-    return <ChatContext.Provider value={{client,activateChat,deactivateChat,unRead,markAsRead,friendRequest,notification}}>
+    return <ChatContext.Provider value={{client,activateChat,deactivateChat,unRead,markAsRead,notification}}>
             {children}
     </ChatContext.Provider>
 }

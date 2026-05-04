@@ -3,6 +3,7 @@ import { ConversationType } from "@/enums/conversationType";
 import { MessageType } from "@/enums/messageType";
 import { useChatContext } from "@/hooks/useChatContext";
 import { LastMessageResponse } from "@/types/message/lastMessageResponse";
+import { toRelative } from "@/utils/convertTime";
 import { MessageCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
@@ -13,7 +14,7 @@ interface ConversationItemProps {
   id:number;
 //   avatar: string;
   lastMessage: LastMessageResponse|null;
-  lastTime?:string;
+  lastTime:string;
   isActive?: boolean;
   type:ConversationType;
 }
@@ -51,12 +52,11 @@ export default function ConversationItem({ name, lastMessage,lastTime, isActive,
         <h4 className="text-gray-900 font-semibold truncate">{name}</h4>
         <p className="text-gray-500 text-sm truncate">
           {unRead[id] ? <b className="text-black">Có tin nhắn chưa đọc</b>: lastMessage?.messageType == MessageType.RECALLED?"Tin nhắn đã bị thu hồi":
-          (lastMessage?.senderId != Number(ownerId)?`${lastMessage?.senderName}: `:"You: ") + `${lastMessage?.content ? lastMessage.content: lastMessage?.mediaType}`
-          ||"Hãy bắt đầu cuộc trò chuyện..." }
+          lastMessage?.content ? ((lastMessage?.senderId != Number(ownerId)?`${lastMessage?.senderName}: `:"Bạn: ") + `${lastMessage?.content ? lastMessage.content: lastMessage?.mediaType}`):"Hãy bắt đầu cuộc trò chuyện..." }
         </p>
       </div>
 
-      <div className="text-xs text-gray-400">{lastTime||"few sec"}</div>
+      <div className="text-xs text-gray-400">{lastTime ? toRelative(lastTime): ""}</div>
     </div>
   );
 }

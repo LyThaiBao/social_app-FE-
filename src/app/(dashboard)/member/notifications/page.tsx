@@ -12,6 +12,7 @@ import { NotificationType } from "@/enums/notificationType";
 import { markReadNotifi } from "@/services/notification/markReadNotifi";
 import { useNotfiContext } from "@/context/NotificationProvider";
 import NotifiEmpty from "./_components/NotifiEmpty";
+import FriendResponseNotifi from "./_components/FriendResponseNotifi";
 
 export default function NotificationPage(){
     const [notifications,setNotifications] = useState<NotificationResponse<FriendRequest|NewMessageResponse>[]>([]);
@@ -24,11 +25,13 @@ export default function NotificationPage(){
 
    
     const {notification} = useChatContext();
+
     useEffect(()=>{
      (async ()=>{
         if(!ownerId) return;
-       const notifications =  await getAllNotification(ownerId)
+       const notifications =  await getAllNotification(ownerId);
        setNotifications(notifications);
+       console.log("ALL NOTIFI: ",notifications)
      })()
     },[ownerId,notification])
 
@@ -50,7 +53,11 @@ export default function NotificationPage(){
     {notifications.map((n)=>{
         if(n.type == NotificationType.REQUEST_FRIEND){
             const payload =  n.payload as FriendRequest;
-            return <FriendRequestNotifi senderId={payload.senderId} senderName={payload.senderName} sentTime={5} />
+            return <FriendRequestNotifi key={n.time} senderId={payload.senderId} senderName={payload.senderName} sentTime={n.time} />
+        }
+        if(n.type == NotificationType.FRIEND_ACCEPTED){
+            const payload = n.payload as FriendRequest;
+            return <FriendResponseNotifi key={n.time}  senderId={payload.senderId} senderName={payload.senderName} sentTime={n.time} />
         }
     })}
     

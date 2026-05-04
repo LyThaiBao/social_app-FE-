@@ -23,8 +23,8 @@ export default function MemberLayout({
       context.deactivateChat();
     }
   },[])
-  const a = new Dayjs();
-  console.log(">>>DAY JS: ",a);
+
+
   
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   return (

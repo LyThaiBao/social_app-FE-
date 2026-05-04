@@ -5,5 +5,5 @@ import { Instant } from "next";
 export interface NotificationResponse<T>{
     type:NotificationType;
     payload:T;
-    time:Instant;
+    time:string;
 }

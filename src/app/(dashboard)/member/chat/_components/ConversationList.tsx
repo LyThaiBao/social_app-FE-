@@ -2,7 +2,7 @@
 import { ConversationResponse } from "@/types/conversation/conversationResponse";
 import { LastMessageResponse } from "@/types/message/lastMessageResponse";
 import ConversationItem from "./ConversationItem";
-import { MessageType } from "@/enums/messageType";
+
 
 export default function ConversationList({conversations}:{conversations:(ConversationResponse&{lastMessage:LastMessageResponse|null})[]}){
     return <div className="space-y-2">
@@ -14,7 +14,7 @@ export default function ConversationList({conversations}:{conversations:(Convers
             id={conv.conversationId}
             // avatar={conv.conversationAvatar}
             lastMessage={conv.lastMessage} 
-            lastTime={conv.lastMessage?.lastTime}
+            lastTime={conv.lastMessage?conv.lastMessage.lastTime:""}
           />
         ))}
       </div>

@@ -3,11 +3,10 @@
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client"
 import { createContext, useCallback, useState } from "react"
-import { NotificationProvider } from "./NotificationProvider";
-import { MessageResponse } from "@/types/message/messageResponse";
 import { NotificationResponse } from "@/types/notification/notificationResponse";
 import { NewMessageResponse } from "@/types/notification/newMessage";
 import { NotificationType } from "@/enums/notificationType";
+import { FriendRequest } from "@/types/notification/friendRequest";
 
 
 interface ChatContextType{
@@ -16,6 +15,9 @@ interface ChatContextType{
     deactivateChat: () => void;
     unRead:Record<string,boolean>;
     markAsRead:(id:number|string)=>void;
+    //-----Friend request-----
+    friendRequest:NotificationResponse<FriendRequest>|null;
+    notification:number;
 
 }
 export const ChatContext = createContext< ChatContextType | null>(null);
@@ -23,6 +25,8 @@ export const ChatContext = createContext< ChatContextType | null>(null);
 export function ChatProvider({children}:{children:React.ReactNode}){
     const [client,setClient] = useState<Client | null>(null);
     const [unRead,setUnRead] = useState<Record<string,boolean>>({});
+    const [friendRequest,setFriendRequest] = useState<NotificationResponse<FriendRequest>|null>(null);
+    const [notification,setNotification] = useState<number>(0);
     //-------------Hand shake-------------
     const  activateChat = useCallback(() => {
         const socket = new SockJS(process.env.NEXT_PUBLIC_WS_URL); // anten 
@@ -34,16 +38,24 @@ export function ChatProvider({children}:{children:React.ReactNode}){
                 setClient(stompClient) // Lưu vào state để các page dùng
 
                 stompClient.subscribe(`/queue/notification`,(msg) => {
-                    const body:NotificationResponse<NewMessageResponse> = JSON.parse(msg.body);
+                    const body = JSON.parse(msg.body); // body: <type:<friend request | like ,...>, payload ,timeStamp: time happened notifi>
                     switch(body.type){
                         case NotificationType.NEW_MESSAGE:
+                            const newMsg:NotificationResponse<NewMessageResponse> = body;
                             setUnRead(pre => ({
-                        ...pre,
-                        [body.payload.conversationId]: true
-                    }))
-                            break;
+                                ...pre,
+                                [newMsg.payload.conversationId]: true
+                            }))
+                        break;
+
+                         case NotificationType.REQUEST_FRIEND:
+                            setNotification(pre => pre+1);
+                            const friendRequest:NotificationResponse<FriendRequest> =  body;
+                            setFriendRequest(friendRequest); // save and give for consummer compo  
+                            console.log(">>> FRIEND REQUEST: ",body)
+                         break;
                     }
-                    console.log("NOTIFICATION >>> ",body)
+                    // console.log("NOTIFICATION >>> ",body)
                 })
             },
             onDisconnect: () => {
@@ -57,7 +69,7 @@ export function ChatProvider({children}:{children:React.ReactNode}){
         //Kích hoạt kết nối
         stompClient.activate(); 
 
-        //Cleanup: Khi component này bị "hủy"
+
         return () => {
             stompClient.deactivate();
         };
@@ -75,7 +87,11 @@ export function ChatProvider({children}:{children:React.ReactNode}){
         setUnRead(pre => ({...pre,[id]:false}))
     }
 
-    return <ChatContext.Provider value={{client,activateChat,deactivateChat,unRead,markAsRead}}>
+    const sawNotifi = () =>{
+        setNotification(0);
+    }
+
+    return <ChatContext.Provider value={{client,activateChat,deactivateChat,unRead,markAsRead,friendRequest,notification}}>
             {children}
     </ChatContext.Provider>
 }

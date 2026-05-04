@@ -1,6 +1,6 @@
 'use client';
 
-import { registerMember } from '@/services/registerService';
+import { registerMember } from '@/services/auth/registerService';
 import { RegisterRequestForm, RegisterRequestType, RegisterSchema } from '@/types/register/registerRequest';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
@@ -59,21 +59,6 @@ export default function RegisterPage() {
               <small className='text-red-500'>{errors.fullName?.message}</small>
             </div>
           </div>
-
-          {/* Email */}
-          {/* <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-              Địa chỉ Email
-            </label>
-            <input
-              type="email"
-              
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-slate-900"
-              placeholder="example@gmail.com"
-            />
-          </div> */}
-
-          {/* Username (Cái này cực quan trọng cho Chat Principal) */}
 
           <div className='flex  gap-5 text-xs font-bold text-slate-700 uppercase tracking-wider my-5'>
 

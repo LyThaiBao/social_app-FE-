@@ -1,6 +1,7 @@
 'use client';
 
-import { login } from '@/services/LoginService';
+
+import { login } from '@/services/auth/LoginService';
 import { LoginRequestType, LoginSchema } from '@/types/login/LoginRequest';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';

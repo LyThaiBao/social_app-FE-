@@ -22,7 +22,7 @@ import Typing from "../_components/Typing";
 import { MediaType } from "@/enums/mediaType";
 import BlankChat from "./_components/BlankChat";
 import { useChatContext } from "@/hooks/useChatContext";
-import { id } from "zod/locales";
+
 
 export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: string }> }) {
     const [currentId,setCurrentId] = useState<string|null>(null)
@@ -49,7 +49,7 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
         })()
     },[])
 
-   
+   //------------When user appear in this compo all msg of this conv is mark as read
 
     useEffect(()=>{
         context.markAsRead(conversationId)
@@ -316,6 +316,7 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
                         <p className="text-md ">{m.messageType == MessageType.RECALLED ? "Tin nhắn đã bị thu hồi" : m.content}</p>
                         <small className="text-[10px]">{m.sentTime}</small>
                     </div>
+                       
                     {/* Media */}
                     {m.mediaType == MediaType.IMAGE && m.messageType != MessageType.RECALLED &&
                     <div className="relative border-1">

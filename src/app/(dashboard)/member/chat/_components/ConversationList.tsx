@@ -13,7 +13,7 @@ export default function ConversationList({conversations}:{conversations:(Convers
             type={conv.type}
             id={conv.conversationId}
             // avatar={conv.conversationAvatar}
-            lastMessage={conv.lastMessage?.messageType === MessageType.RECALLED ? "Tin nhắn đã bị thu hồi" : conv.lastMessage?.content  || conv.lastMessage?.mediaType} 
+            lastMessage={conv.lastMessage} 
             lastTime={conv.lastMessage?.lastTime}
           />
         ))}

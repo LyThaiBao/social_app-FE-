@@ -5,5 +5,7 @@ export interface LastMessageResponse{
     content:string;
     messageType:MessageType;
     mediaType:MediaType;
+    senderName:string;
+    senderId:number;
     lastTime:string;
 }

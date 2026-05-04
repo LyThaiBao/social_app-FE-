@@ -1,15 +1,18 @@
 "use client"
 import { ConversationType } from "@/enums/conversationType";
+import { MessageType } from "@/enums/messageType";
 import { useChatContext } from "@/hooks/useChatContext";
+import { LastMessageResponse } from "@/types/message/lastMessageResponse";
 import { MessageCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 import { string } from "zod";
 
 interface ConversationItemProps {
   name: string;
   id:number;
 //   avatar: string;
-  lastMessage?: string;
+  lastMessage: LastMessageResponse|null;
   lastTime?:string;
   isActive?: boolean;
   type:ConversationType;
@@ -27,14 +30,15 @@ export default function ConversationItem({ name, lastMessage,lastTime, isActive,
             url += `public/${id}`;
         }
         router.push(url);
-        context.markAsRead(id);
-
-
     }
 
-
+    const ownerId = useMemo(()=>{
+      const id = localStorage.getItem("memberId");
+      return id;
+    },[id])
    
-    const isUnread = context.unRead[id]||false;
+    const {unRead} = context;
+    console.log(">>UNREAD: ",unRead)
   return (
     <div onClick={()=>onChat()} className={`flex items-center gap-4 p-4 cursor-pointer transition-all duration-200 rounded-2xl 
       ${isActive ? 'bg-blue-50' : 'hover:bg-gray-300'}`}>
@@ -46,7 +50,9 @@ export default function ConversationItem({ name, lastMessage,lastTime, isActive,
       <div className="flex-1 min-w-0">
         <h4 className="text-gray-900 font-semibold truncate">{name}</h4>
         <p className="text-gray-500 text-sm truncate">
-          {isUnread ? <b className="text-black">Có tin nhắn chưa đọc</b>:lastMessage || "Hãy bắt đầu cuộc trò chuyện..."}
+          {unRead[id] ? <b className="text-black">Có tin nhắn chưa đọc</b>: lastMessage?.messageType == MessageType.RECALLED?"Tin nhắn đã bị thu hồi":
+          (lastMessage?.senderId != Number(ownerId)?`${lastMessage?.senderName}: `:"You: ") + `${lastMessage?.content ? lastMessage.content: lastMessage?.mediaType}`
+          ||"Hãy bắt đầu cuộc trò chuyện..." }
         </p>
       </div>
 

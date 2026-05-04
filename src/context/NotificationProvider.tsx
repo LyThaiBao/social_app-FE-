@@ -1,26 +1,43 @@
 "use client"
-import React, { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { useChatContext } from "@/hooks/useChatContext";
+import { getUnReadNotifi } from "@/services/notification/getUnReadNotifi";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
-interface props{
-    not:()=>void;
-} 
+interface NotifiContextType{
+    unReadNotifi:number;
+    setUnReadNotifi:React.Dispatch<React.SetStateAction<number>>;
+}
 
-const Notification = createContext<props|null>(null);
+const NotifiContext = createContext<NotifiContextType|null>(null);
+
 export function NotificationProvider({children}:{children:React.ReactNode}){
+    const [unReadNotifi,setUnReadNotifi] = useState<number>(0);
+    const {notification} = useChatContext();
+        const [ownerId,setOwnerId] = useState<number|null>(null);
+    useEffect(()=>{
+        const id = Number(localStorage.getItem("memberId"));
+        setOwnerId(id);
+    },[]) 
 
-    const {client} = useChatContext();
-
+    useEffect(()=>{
+        (async ()=>{
+            if(!ownerId) return;
+            const count = await getUnReadNotifi(ownerId);
+            setUnReadNotifi(count);
+        })()
+    },[notification,ownerId])
    
-        const not = ()=>{
-            if(!client?.connected) return "chua connect" ;
-            console.log("PREPARE NOTIFICATION >>> ");
-            const sub = client.subscribe(`/queue/notification`,(msg) => {
-            console.log("NOTIFICATION >>> ",msg);
-            const content = JSON.parse(msg.body);
-            return content;
-        })
-        }
 
-    return <Notification.Provider value={{not}}>{children}</Notification.Provider>
+    return <NotifiContext.Provider value={{unReadNotifi,setUnReadNotifi}}>
+        {children}
+    </NotifiContext.Provider>
+
+}
+
+export const useNotfiContext = () =>{
+    const a = useContext(NotifiContext);
+    if(!a){
+        throw new Error("U r use this hook out of NotificationProvider");
+    }
+    return a;
 }

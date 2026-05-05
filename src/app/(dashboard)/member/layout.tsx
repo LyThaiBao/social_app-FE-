@@ -5,7 +5,7 @@ import Sidebar from "./_components/Sidebar";
 import { Menu } from "lucide-react";
 import { useChatContext } from "@/hooks/useChatContext";
 import { NotificationProvider } from "@/context/NotificationProvider";
-import { Dayjs } from "dayjs";
+
 
 
 export default function MemberLayout({
@@ -29,7 +29,7 @@ export default function MemberLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   return (
    <NotificationProvider>
-     <div className="min-h-screen bg-[#f8fafc]">
+     <div className="min-h-screen bg-[#f8fafc] dark">
       <div onClick={()=>setIsSidebarOpen(false)} className={isSidebarOpen?"fixed inset-0 bg-black opacity-50 z-5":""}></div>
       <Header />
       <div className="max-w-10xl mx-auto pt-20 px-4 flex gap-6">

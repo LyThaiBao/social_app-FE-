@@ -4,14 +4,14 @@
 
 import { toRelative } from "@/utils/convertTime";
 import { useRouter } from "next/navigation";
-export default function FriendRequestNotifi({senderId,senderName,sentTime}:{senderId:number,senderName:string,sentTime:string}){
+export default function FriendRequestNotifi({id,senderId,senderName,sentTime,onDelete}:{id:number,senderId:number,senderName:string,sentTime:string,onDelete:(id:number)=>void}){
   
  const router = useRouter();
 
     function onViewNotification(id:number){ // this fnc should more intelligen
         router.push(`/member/${id}`)
     }
-    return (<div onClick={()=>onViewNotification(senderId)} className="cursor-pointer flex items-center justify-between p-4 mb-2 bg-white border-l-4 border-blue-500 rounded-lg shadow-sm hover:bg-gray-50 transition-all duration-200">
+    return (<div  onClick={()=>onViewNotification(senderId)} className="cursor-pointer flex items-center justify-between p-4 mb-2 bg-white border-l-4 border-blue-500 rounded-lg shadow-sm hover:bg-gray-50 transition-all duration-200">
     <div className="flex items-center space-x-4">
         <div className="relative">
             <div className="w-12 h-12 bg-gradient-to-tr from-blue-400 to-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-inner">
@@ -35,7 +35,10 @@ export default function FriendRequestNotifi({senderId,senderName,sentTime}:{send
 
 
     <div className="flex space-x-2">
-        <button className="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded-md transition-colors">
+        <button type="button" onClick={(e)=>{
+            onDelete(id);
+            e.stopPropagation();
+        }} className="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded-md transition-colors">
             Xóa
         </button>
     </div>

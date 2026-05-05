@@ -13,15 +13,19 @@ import { markReadNotifi } from "@/services/notification/markReadNotifi";
 import { useNotfiContext } from "@/context/NotificationProvider";
 import NotifiEmpty from "./_components/NotifiEmpty";
 import FriendResponseNotifi from "./_components/FriendResponseNotifi";
+import { deleteNotification } from "@/services/notification/deleteNotification";
+
 
 export default function NotificationPage(){
     const [notifications,setNotifications] = useState<NotificationResponse<FriendRequest|NewMessageResponse>[]>([]);
+    const[flag,setFlag] = useState<boolean>(false);
     const [ownerId,setOwnerId] = useState<number|null>(null);
     const {setUnReadNotifi} = useNotfiContext();
     useEffect(()=>{
         const id = Number(localStorage.getItem("memberId"));
         setOwnerId(id);
     },[]) 
+
 
    
     const {notification} = useChatContext();
@@ -33,7 +37,7 @@ export default function NotificationPage(){
        setNotifications(notifications);
        console.log("ALL NOTIFI: ",notifications)
      })()
-    },[ownerId,notification])
+    },[ownerId,notification,flag])
 
   
    useEffect(()=>{
@@ -49,15 +53,24 @@ export default function NotificationPage(){
    if(notifications.length == 0){
     return <NotifiEmpty/>
    }
+
+   async function onDeleteNotifi(id:number){
+    console.log(">>DELETED ID: ",id);
+    await deleteNotification(id);
+    setFlag(pre =>!pre);
+    
+   }
+
     return <div>
     {notifications.map((n)=>{
+
         if(n.type == NotificationType.REQUEST_FRIEND){
             const payload =  n.payload as FriendRequest;
-            return <FriendRequestNotifi key={n.time} senderId={payload.senderId} senderName={payload.senderName} sentTime={n.time} />
+            return <FriendRequestNotifi id={n.id} key={n.id} senderId={payload.senderId} senderName={payload.senderName} sentTime={n.time} onDelete={onDeleteNotifi}  />
         }
         if(n.type == NotificationType.FRIEND_ACCEPTED){
             const payload = n.payload as FriendRequest;
-            return <FriendResponseNotifi key={n.time}  senderId={payload.senderId} senderName={payload.senderName} sentTime={n.time} />
+            return <FriendResponseNotifi key={n.id} id={n.id} onDelete={onDeleteNotifi}  senderId={payload.senderId} senderName={payload.senderName} sentTime={n.time} />
         }
     })}
     

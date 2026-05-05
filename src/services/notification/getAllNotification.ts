@@ -4,7 +4,7 @@ import { NotificationResponse } from "@/types/notification/notificationResponse"
 import { RouteResponse } from "@/types/routeResponse/routeResponse";
 
 export async function getAllNotification(memberId:number){
-    console.log(">>>LOG")
+
     const url = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/notification`;
     try{
         const response = await fetch(url,{
@@ -17,7 +17,7 @@ export async function getAllNotification(memberId:number){
         })
 
         const result:RouteResponse<NotificationResponse<FriendRequest|NewMessageResponse>[]> = await response.json();
-        // console.log("[service Log]: ",result)
+        console.log("[service Log]: ",result)
         if(!response.ok){
             throw new Error(result.message);
         }

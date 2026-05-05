@@ -12,8 +12,10 @@ const NotifiContext = createContext<NotifiContextType|null>(null);
 
 export function NotificationProvider({children}:{children:React.ReactNode}){
     const [unReadNotifi,setUnReadNotifi] = useState<number>(0);
+
     const {notification} = useChatContext();
-        const [ownerId,setOwnerId] = useState<number|null>(null);
+
+    const [ownerId,setOwnerId] = useState<number|null>(null);
     useEffect(()=>{
         const id = Number(localStorage.getItem("memberId"));
         setOwnerId(id);

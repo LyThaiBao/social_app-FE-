@@ -4,7 +4,7 @@
 
 import { toRelative } from "@/utils/convertTime";
 import { useRouter } from "next/navigation";
-export default function FriendResponseNotifi({senderId,senderName,sentTime}:{senderId:number,senderName:string,sentTime:string}){
+export default function FriendResponseNotifi({id,senderId,senderName,sentTime,onDelete}:{id:number,senderId:number,senderName:string,sentTime:string,onDelete:(id:number)=>void}){
   
  const router = useRouter();
 
@@ -35,7 +35,10 @@ export default function FriendResponseNotifi({senderId,senderName,sentTime}:{sen
 
 
     <div className="flex space-x-2">
-        <button className="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded-md transition-colors">
+        <button onClick={(e)=>{
+            e.stopPropagation();
+            onDelete(id);
+        }} className="px-4 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded-md transition-colors">
             Xóa
         </button>
     </div>

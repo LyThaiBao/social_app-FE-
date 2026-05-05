@@ -5,6 +5,7 @@ import { MessageResponse } from "@/types/message/messageResponse";
 import { getLastMessageByConversationId } from "@/services/messages/getLastMessageByCvn";
 import { LastMessageResponse } from "@/types/message/lastMessageResponse";
 import ConversationList from "./_components/ConversationList";
+import EmptyChat from "./_components/EmptyChat";
 
 export default async  function ChatPage(){
     const cook = await  cookies();
@@ -25,11 +26,13 @@ export default async  function ChatPage(){
       })
 
     )
+    if(conversationsAndLastMessage.length == 0){
+      return <EmptyChat/>
+    }
 
      return (
     <div className=" mx-auto h-full bg-white border-r border-gray-300 p-4">
       <h2 className="text-2xl font-bold mb-6 px-2 text-black">Đoạn chat</h2>
-      
       <ConversationList conversations={conversationsAndLastMessage}/>
     </div>
   );

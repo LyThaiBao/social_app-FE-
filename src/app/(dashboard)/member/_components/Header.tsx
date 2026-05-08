@@ -1,10 +1,13 @@
 "use client"
 import { getFirstChar } from "@/utils/getFirstChar";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import {Moon,Sun} from "lucide-react"
+import { useThemeContext } from "@/hooks/useThemeContext";
 
 export default function Header() {
-  // const character = getFirstChar(fullName);
+  const themeContext = useThemeContext();
+  const theme = themeContext.theme?.theme;
 
   const [fullName,setFullName] =useState<string>("User");
   useEffect(()=>{
@@ -14,11 +17,11 @@ export default function Header() {
   },[])
 
   return (
-    <header className="fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b border-slate-200 z-50">
+    <header className={`fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b text-white border-slate-200 z-50 dark:bg-gray-900 dark:text-blue-500`}>
       <div className="max-w-7xl mx-auto h-full px-4 flex items-center justify-between">
         
         {/* Logo */}
-        <Link href="/member" className="text-2xl font-black text-blue-600 tracking-tighter">
+        <Link href="/member" className="text-2xl font-black  tracking-tighter">
           SOCIALAPP
         </Link>
 
@@ -35,7 +38,15 @@ export default function Header() {
             <div className="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-sm border border-blue-200">
               {getFirstChar(fullName)}
             </div>
-            <span className="hidden md:block text-sm font-semibold text-slate-700">{fullName}</span>
+            <span className="hidden md:block text-sm font-semibold">{fullName}</span>
+          </div>
+          <div>
+            {theme == "dark" && <button onClick={()=>themeContext.theme?.setTheme("light")}>
+                <Sun className="text-orange-500" /> 
+              </button>}
+             {theme == "light" && <button onClick={()=>themeContext.theme?.setTheme("dark")}>
+                <Moon className="text-orange-500" /> 
+              </button>}
           </div>
         </div>
 

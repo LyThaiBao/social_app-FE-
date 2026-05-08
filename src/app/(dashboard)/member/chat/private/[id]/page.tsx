@@ -284,7 +284,7 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
                     </p>
                 </div>
 )}
-                <div className={`text-black hidden text-sm group-hover:flex ${isMyMessage ?  "order-first": "order-last"} gap-5 m-2`}>
+                <div className={`text-black dark:text-white hidden text-sm group-hover:flex ${isMyMessage ?  "order-first": "order-last"} gap-5 m-2`}>
                     <button onClick={()=>onDetail(m)} >
                         <Info size={15} className="inline mr-1"/>
                         Detail
@@ -306,7 +306,7 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
 
                 <div className="max-w-[70%]" id={`${m.id}`}>
                     
-                    <div className={` p-3 rounded-2xl shadow-sm ${isMyMessage ? "bg-blue-500 text-white rounded-br-none" : "bg-gray-100 text-black rounded-bl-none"}`}>
+                    <div className={` p-3 rounded-2xl shadow-sm text-black dark:text-white ${isMyMessage ? "bg-blue-500  rounded-br-none text-white" : "bg-gray-100  rounded-bl-none dark:bg-gray-600 "}`}>
                         <p className="text-md ">{m.messageType == MessageType.RECALLED ? "Tin nhắn đã bị thu hồi" : m.content}</p>
                         <small className="text-[10px]">{m.sentTime}</small>
                     </div>
@@ -345,7 +345,7 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
 )}
 
     {/* -------------------------------------------------------------------------------------------------- */}
-     <footer className={`fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-[0_-2px_5px_rgba(0,0,0,0.05)]`}>
+     <footer className={`fixed bottom-0 left-0 right-0 p-4 bg-white dark:bg-gray-800 border-t border-gray-200 shadow-[0_-2px_5px_rgba(0,0,0,0.05)]`}>
         <form onSubmit={handleSubmit(onSend)} className="flex items-center gap-2 max-w-4xl mx-auto">
    
      {getValues("file") && 
@@ -365,7 +365,7 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
     </label>
         <input type="text" placeholder="Nhập tin nhắn..." {...register("message")}
             onClick={onTyping}
-            className="  flex-1 px-4 py-3 text-black bg-gray-100 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            className="  flex-1 px-4 py-3 text-black bg-gray-100 dark:bg-gray-800 dark:text-white  border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
          <button className={`px-6 py-3 flex gap-2 items-center rounded-2xl font-semibold transition ${isUploading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700 text-white"}`}>
             {isUploading ? ( <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>) : (<Send size={18} />)}

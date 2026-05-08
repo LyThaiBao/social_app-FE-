@@ -15,10 +15,10 @@ export default function NotifiEmpty(){
         <span className="absolute -bottom-2 -right-6 text-2xl animate-spin-slow">🌈</span>
     </div>
 
-    <h3 className="text-2xl font-black text-black tracking-tight mb-3">
+    <h3 className="text-2xl font-black text-black tracking-tight mb-3 dark:text-white">
         TỊNH TÂM QUÁ BẠN ƠI!
     </h3>
-    <p className="text-gray-600 font-medium max-w-[280px] leading-relaxed">
+    <p className="text-gray-600  dark:text-white font-medium max-w-[280px] leading-relaxed">
         Hộp thư đang "trống rỗng" như ví tiền của bạn vậy. Đi tương tác dạo đi nào! 🏃‍♂️💨
     </p>
 

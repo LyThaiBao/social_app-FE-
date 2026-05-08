@@ -2,7 +2,7 @@
 
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client"
-import { createContext, useCallback, useState } from "react"
+import { createContext, useCallback, useMemo, useState } from "react"
 import { NotificationResponse } from "@/types/notification/notificationResponse";
 import { NewMessageResponse } from "@/types/notification/newMessage";
 import { NotificationType } from "@/enums/notificationType";
@@ -35,8 +35,10 @@ export function ChatProvider({children}:{children:React.ReactNode}){
                 console.log(">>> Connected");
                 setClient(stompClient) // Lưu vào state để các page dùng
 
-                stompClient.subscribe(`/queue/notification`,(msg) => {
+                stompClient.subscribe(`/user/queue/notification`,(msg) => {
+                    console.log(">>>[FRAME]: NOTIFICATION: "+msg)
                     const body = JSON.parse(msg.body); // body: <type:<friend request | like ,...>, payload ,timeStamp: time happened notifi>
+                    // console.log("NOTIFICATION >>> ",body)
                     switch(body.type){
                         case NotificationType.NEW_MESSAGE:
                             const newMsg:NotificationResponse<NewMessageResponse> = body;
@@ -58,7 +60,6 @@ export function ChatProvider({children}:{children:React.ReactNode}){
                             console.log(">>>FRIEND ACCEPTED: ",body);
                          break;    
                     }
-                    // console.log("NOTIFICATION >>> ",body)
                 })
             },
             onDisconnect: () => {
@@ -77,7 +78,7 @@ export function ChatProvider({children}:{children:React.ReactNode}){
             stompClient.deactivate();
         };
 
-    },[client])
+    },[client?.connected])
 
     const deactivateChat = useCallback(()=>{
         if(client){
@@ -89,9 +90,16 @@ export function ChatProvider({children}:{children:React.ReactNode}){
     const markAsRead = (id:number|string)=>{
         setUnRead(pre => ({...pre,[id]:false}))
     }
+const value = useMemo(() => ({
+        client,
+        activateChat,
+        deactivateChat,
+        unRead,
+        markAsRead,
+        notification
+    }), [client, unRead, notification, activateChat, deactivateChat]);
 
-
-    return <ChatContext.Provider value={{client,activateChat,deactivateChat,unRead,markAsRead,notification}}>
+    return <ChatContext.Provider value={value}>
             {children}
     </ChatContext.Provider>
 }

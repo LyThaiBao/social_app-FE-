@@ -51,7 +51,7 @@ export default function BoxSearch(){
       placeholder="Nhập username để tìm bạn bè..."
       className="block w-full pl-12 pr-12 py-3.5 bg-white border border-slate-200 rounded-2xl shadow-sm 
              placeholder:text-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 
-             focus:border-blue-500 transition-all text-sm outline-none text-black"
+             focus:border-blue-500 transition-all text-sm outline-none text-black dark:bg-gray-800 dark:text-white"
              {...register("info")}
     /> 
 

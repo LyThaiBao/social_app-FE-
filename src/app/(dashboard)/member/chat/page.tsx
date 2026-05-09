@@ -31,8 +31,8 @@ export default async  function ChatPage(){
     }
 
      return (
-    <div className=" mx-auto h-full bg-white border-r border-gray-300 p-4">
-      <h2 className="text-2xl font-bold mb-6 px-2 text-black">Đoạn chat</h2>
+    <div className=" mx-auto h-full  border-r border-gray-300 p-4 text-black dark:text-white">
+      <h2 className="text-2xl font-bold mb-6 px-2 ">Đoạn chat</h2>
       <ConversationList conversations={conversationsAndLastMessage}/>
     </div>
   );

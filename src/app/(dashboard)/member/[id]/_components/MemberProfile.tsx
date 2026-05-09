@@ -120,7 +120,7 @@ import { findOrCreateConversation } from "@/services/conversation/findOrCreateCo
     return (
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Header Profile - Trải dài toàn màn hình */}
-        <div className="relative bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden mb-6">
+        <div className="relative bg-white dark:bg-gray-800 dark:text-white  text-gray-900 rounded-3xl shadow-sm border border-gray-100 overflow-hidden mb-6">
           {/* Cover Photo (Ảnh bìa) */}
           <div className="h-48 md:h-64 bg-gradient-to-r from-blue-600 to-indigo-700"></div>
 
@@ -137,7 +137,7 @@ import { findOrCreateConversation } from "@/services/conversation/findOrCreateCo
 
             
               <div className="flex-1 mb-2">
-                <h1 className="text-3xl font-bold  text-gray-900">{data.fullName}</h1>
+                <h1 className="text-3xl font-bold ">{data.fullName}</h1>
                 <div className="flex flex-wrap gap-4 mt-2 text-gray-500 text-sm">
                   <span className="flex items-center gap-1">
                     <IdCard size={16} /> ID: {data.id}
@@ -207,16 +207,16 @@ import { findOrCreateConversation } from "@/services/conversation/findOrCreateCo
           
           {/* Cột trái: Thông tin chi tiết (Chiếm 1 phần) */}
           <div className="lg:col-span-1 space-y-6">
-            <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-              <h3 className="text-lg font-bold text-gray-800 mb-4 text-left">Giới thiệu</h3>
+            <div className="bg-white dark:bg-gray-800 dark:text-white p-6 rounded-3xl shadow-sm border border-gray-100">
+              <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 text-left">Giới thiệu</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
-                  <div className="p-2 bg-blue-50 text-blue-600 rounded-lg">
+                  <div className="p-2 bg-blue-50 text-blue-600  rounded-lg">
                     <User size={20} />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-400 font-bold uppercase tracking-tighter">Họ tên</p>
-                    <p className="text-sm font-medium text-gray-700">{data.fullName}</p>
+                    <p className="text-xs text-gray-400  font-bold uppercase tracking-tighter">Họ tên</p>
+                    <p className="text-sm font-medium text-gray-700 dark:text-white">{data.fullName}</p>
                   </div>
                 </div>
 
@@ -226,7 +226,7 @@ import { findOrCreateConversation } from "@/services/conversation/findOrCreateCo
                   </div>
                   <div>
                     <p className="text-xs text-gray-400 font-bold uppercase tracking-tighter">Sinh nhật</p>
-                    <p className="text-sm font-medium text-gray-700">{`${bd.getDate()}/${bd.getMonth()+1}/${bd.getFullYear()}`}</p>
+                    <p className="text-sm font-medium text-gray-700 dark:text-white">{`${bd.getDate()}/${bd.getMonth()+1}/${bd.getFullYear()}`}</p>
                   </div>
                 </div>
 
@@ -245,7 +245,7 @@ import { findOrCreateConversation } from "@/services/conversation/findOrCreateCo
 
           {/* Cột phải: Hoạt động/Bài viết (Chiếm 2 phần) */}
           <div className="lg:col-span-2">
-            <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 h-full min-h-[300px] flex items-center justify-center">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-sm border border-gray-100 h-full min-h-[300px] flex items-center justify-center">
               <div className="text-center">
                 <div className="inline-flex p-4 bg-gray-50 rounded-full mb-4">
                   <User size={32} className="text-gray-300" />

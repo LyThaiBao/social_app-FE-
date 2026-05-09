@@ -13,10 +13,10 @@ export default function MemberCard({ id, fullName }: MemberProps) {
     router.push(`/member/${id}`)
   }
   return (
-    <button onClick={()=>onView(id)}  className="flex items-center justify-between p-4 dark:bg-gray-800 dark:text-white bg-white border border-slate-100 rounded-2xl hover:bg-blue-50/50 dark:hover:bg-gray-800 hover:border-blue-200  transition-all cursor-pointer group">
+    <button onClick={()=>onView(id)}  className="flex items-center justify-between p-4 text-black dark:bg-gray-800 dark:text-white bg-white border border-slate-100 rounded-2xl hover:bg-blue-50/50 dark:hover:bg-gray-800 hover:border-blue-200  transition-all cursor-pointer group">
       <div className="flex items-center gap-4">
         {/* Avatar Placeholder */}
-        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center  font-bold text-lg shadow-sm">
+        <div className="w-12 h-12 text-white rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center  font-bold text-lg shadow-sm">
           {fullName.charAt(0).toUpperCase()}
         </div>
           

@@ -31,7 +31,7 @@ export default function MemberLayout({
   return (
    <NotificationProvider>
     <ThemeProvider>
-       <div className="min-h-screen bg-[#f8fafc] " >
+       <div className="min-h-screen bg-[#f8fafc] dark:bg-gray-900" >
       <div onClick={()=>setIsSidebarOpen(false)} className={isSidebarOpen?"fixed inset-0 bg-black opacity-50 z-5":""}></div>
       <Header />
       <div className="max-w-10xl mx-auto pt-20 px-4 flex gap-6 dark:bg-gray-900">

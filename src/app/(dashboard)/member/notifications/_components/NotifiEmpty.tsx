@@ -19,11 +19,11 @@ export default function NotifiEmpty(){
         TỊNH TÂM QUÁ BẠN ƠI!
     </h3>
     <p className="text-gray-600  dark:text-white font-medium max-w-[280px] leading-relaxed">
-        Hộp thư đang "trống rỗng" như ví tiền của bạn vậy. Đi tương tác dạo đi nào! 🏃‍♂️💨
+        Hộp thư đang "trống rỗng" như ví tiền của bạn vậy. Đi tương tác dạo đi nào! 
     </p>
 
     <button className="mt-10 px-8 py-3 bg-indigo-500 text-white font-bold rounded-xl border-b-4 border-r-4 border-black hover:translate-x-[2px] hover:translate-y-[2px] hover:border-b-2 hover:border-r-2 transition-all active:scale-95 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-        ĐI KIẾM CHUYỆN NÈ! 🚀
+        ĐI KIẾM CHUYỆN NÈ!
     </button>
 
     <style jsx>{`

@@ -4,7 +4,6 @@ import { NotificationResponse } from "@/types/notification/notificationResponse"
 import { RouteResponse } from "@/types/routeResponse/routeResponse";
 
 export async function getAllNotification(memberId:number){
-
     const url = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/notification`;
     try{
         const response = await fetch(url,{

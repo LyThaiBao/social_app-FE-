@@ -1,6 +1,7 @@
+import { apiServer } from "@/services/axios/apiServer";
+import { throwServerException } from "@/services/exception/throwServerException";
 import { APIResponse } from "@/types/apiResponse/APIResponse";
 import { UploadResponse } from "@/types/upload/uploadResponse";
-import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request:NextRequest){
@@ -19,28 +20,24 @@ export async function POST(request:NextRequest){
     }
 
     const url = `${process.env.BACKEND_URL}/api/cloud/upload`;
-    const cook = await cookies();
-    const token = cook.get("accessToken")?.value;
     const beFormData = new FormData();
     beFormData.append("file",file); 
     try{
-        const response = await fetch(url,{
-            method:"POST",
-            headers:{
-                // Trình duyệt/Fetch sẽ tự động tạo Header kèm 'boundary' cho.
-                Authorization:`Bearer ${token}`
-            },
-            body:beFormData,
-            signal:request.signal
-        })
-        
-        const result:APIResponse<UploadResponse> = await response.json();
-        if(!response.ok){
-            return NextResponse.json({message:result.message, data:null,isSuccess:false},{status:response.status});
-        }
+        // const response = await fetch(url,{
+        //     method:"POST",
+        //     headers:{
+        //         // Trình duyệt/Fetch sẽ tự động tạo Header kèm 'boundary' cho.
+        //         Authorization:`Bearer ${token}`
+        //     },
+        //     body:beFormData,
+        //     signal:request.signal
+        // })
+        const response = await apiServer.post<APIResponse<UploadResponse>>(url,beFormData,{signal:request.signal})
+        const result =  response.data;
+
          return NextResponse.json({message:result.message, data:result.body,isSuccess:false},{status:200});
     }
-    catch(err){
-             return NextResponse.json({message:"Server Error", data:null,isSuccess:false},{status:500});
+    catch(err:unknown){
+            return throwServerException(err);
     }
 }

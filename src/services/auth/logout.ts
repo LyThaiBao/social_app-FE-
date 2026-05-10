@@ -1,15 +1,17 @@
 import { RouteResponse } from "@/types/routeResponse/routeResponse"
+import axios from "axios";
 
 export async function logout(){
     try{
-        const response = await fetch("/api/auth/logout",{
-            method:"GET"
-        })
-        const result:RouteResponse<string> = await response.json();
-
+        const response = await axios.get<RouteResponse<string>>("/api/auth/logout")
+        const result = response.data;
+        return result.data;
     }
-    catch(err){
-        console.log("Fail to Logout")
+    catch(err:any){
+      if(err.response){
+        const routeResponse:RouteResponse<string> = err.response.data;
+        throw new Error(routeResponse.message);
+      }
 
     }
 }

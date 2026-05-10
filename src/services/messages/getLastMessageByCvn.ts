@@ -1,25 +1,22 @@
 import { LastMessageResponse } from "@/types/message/lastMessageResponse";
 import { RouteResponse } from "@/types/routeResponse/routeResponse";
+import { apiClient } from "../axios/apiClient";
+import { throwClientException } from "../exception/throwClientException";
 
 export async function getLastMessageByConversationId({conversationId,token}:{conversationId:number,token:string}){
 
     const url =   `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/message/lastmessage`;
     try{
-        const response = await fetch(url,{
-            method:"POST",
+        const response = await apiClient.post<RouteResponse<LastMessageResponse>>(url,{conversationId:conversationId},{
             headers:{
-                "Content-Type":"application/json",
                 Cookie:`accessToken=${token}`
-            },
-            body:JSON.stringify({conversationId:conversationId})
+            }
         })
-        const result:RouteResponse<LastMessageResponse> = await response.json();
-        if(!response.ok){
-            throw new Error(result.message);
-        }
+        const result =  response.data;
+       
         return result.data;
     }
-    catch(err){
-        throw err;
+    catch(err:unknown){
+        throwClientException(err);
     }
 }

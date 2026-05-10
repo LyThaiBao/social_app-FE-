@@ -1,22 +1,21 @@
 import { MeResponse } from "@/types/me/meResponse";
 import { RouteResponse } from "@/types/routeResponse/routeResponse";
+import { apiClient } from "../axios/apiClient";
+import { throwClientException } from "../exception/throwClientException";
 
 export async function getMe({token}:{token:string}){
     const url = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/me`;
     try{
-        const response = await fetch(url,{
-            method:"GET",
+        const response = await apiClient.get<RouteResponse<MeResponse>>(url,{
             headers:{
-                Cookie:`accessToken=${token}`,
+                Cookie:`accessToken=${token}`
             }
         })
-        const result:RouteResponse<MeResponse> = await response.json();
-        if(!response.ok){
-            throw new Error(result.message);
-        }
+        const result =  response.data;
+       
         return result.data;
     }
-    catch(err){
-        throw err;
+    catch(err:unknown){
+       throwClientException(err);
     }
 }

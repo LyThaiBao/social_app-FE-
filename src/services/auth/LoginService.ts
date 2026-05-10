@@ -1,31 +1,27 @@
 import { LoginRequestType } from "@/types/login/LoginRequest";
 import { loginResponse } from "@/types/login/loginResponse";
 import { RouteResponse } from "@/types/routeResponse/routeResponse";
-import { number } from "zod";
+import axios from "axios";
+import { throwClientException } from "../exception/throwClientException";
+
+
 
 export async function login(loginInfo:LoginRequestType){
 
        try{
-         const response = await fetch (`/api/auth/login`,{
-        method:"POST",
-        headers:{
-            "Content-Type":"application/json",
-        },
-        body:JSON.stringify(loginInfo),
-        })
+        const response = await axios.post<RouteResponse<loginResponse>>(
+            `/api/auth/login`
+            ,loginInfo)
 
-
-        const result:RouteResponse<loginResponse> = await response.json();
-        if(!response.ok){
-            throw new Error(result.message);
-        }
+        // dữ liệu trả về từ Server nằm trong property 'data'
+        const result = response.data;
+        // Axios mặc định coi các status code ngoài 2xx là Error,không cần check !response.ok
         console.log(">>> DATA: ",result.data)
         localStorage.setItem("memberId",String(result.data.memberId));
         return result.data;
        }
-       catch(err){
-            if(err instanceof Error)
-            throw new Error(err.message);
+       catch(err:unknown){ // tren server da check loi connect
+          throwClientException<loginResponse>(err);
        }
 
 }

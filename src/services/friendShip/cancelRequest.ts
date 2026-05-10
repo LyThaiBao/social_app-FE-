@@ -1,28 +1,18 @@
 import { FriendShipRequest, FriendShipResponse } from "@/types/friendShip/sendRequest";
 import { RouteResponse } from "@/types/routeResponse/routeResponse";
+import { apiClient } from "../axios/apiClient";
+import { throwClientException } from "../exception/throwClientException";
 
 export async function cancelRequest(request:FriendShipRequest){
     const url = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/friendShip/cancel`;
-    // console.log(">>>URL: ",url)
-    try{
-        const response = await fetch(url,{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json",
-            },
-            body:JSON.stringify(request),
-            credentials:"include"
-        })
-        
-        const result:RouteResponse<FriendShipResponse> = await response.json();
 
-        if(!response.ok){
-            throw new Error(result.message);
-        }
+    try{
+        const response = await apiClient.post<RouteResponse<FriendShipResponse>>(url,request);
+        const result =  response.data;
 
         return result.data;
     }
-    catch(err){
-        throw err;
+    catch(err:unknown){
+        throwClientException(err);
     }
 }

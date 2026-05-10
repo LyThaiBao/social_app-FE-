@@ -1,30 +1,21 @@
+import { apiServer } from "@/services/axios/apiServer";
+import { throwServerException } from "@/services/exception/throwServerException";
 import { APIResponse } from "@/types/apiResponse/APIResponse";
 import { FriendShipResponse } from "@/types/friendShip/sendRequest";
-import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(request:Request){
-    const cook = await cookies();
-    const token = cook.get("accessToken")?.value;
     const info = await request.json();
     const url = `${process.env.BACKEND_URL}/api/friendship/accept`;
     try{
-        const response = await fetch(url,{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json",
-                Authorization:`Bearer ${token}`
-            },
-            body:JSON.stringify(info)
-        })
-        const result:APIResponse<FriendShipResponse> = await response.json();
-        if(!response.ok){
-            return NextResponse.json({message:result.message,data:null},{status:response.status});
-        }
+       
+        const response = await apiServer.post<APIResponse<FriendShipResponse>>(url,info);
+        const result =  response.data;
+        
         return NextResponse.json({message:result.message,data:result.body},{status:200});
     }
-    catch(err){
-        return NextResponse.json({message:"Server Error",data:null},{status:500})
+    catch(err:unknown){
+      return throwServerException(err);
     }
     
 }

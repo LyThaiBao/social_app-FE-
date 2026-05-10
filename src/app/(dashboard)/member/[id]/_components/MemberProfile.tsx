@@ -31,7 +31,7 @@ import { findOrCreateConversation } from "@/services/conversation/findOrCreateCo
     //----------------Send request add Friend ----------------------
   async function addFriend(){
     console.log("ADDFR")
-      await sendRequest({addresserId:data.id,requesterId:me.memberId});
+      await sendRequest({requesterId:me.memberId,addresserId:data.id});
   }
 
   async function denie(fshInfo:FriendShipRequest){
@@ -91,7 +91,7 @@ import { findOrCreateConversation } from "@/services/conversation/findOrCreateCo
     
   }
 
-    const relative = verifyRelative({data,me,friendship});
+  const relative = verifyRelative({data,me,friendship});
 
   async function onHandle(info:MemberProfileProps){
     const currentAction = verifyRelative({data,me,friendship});

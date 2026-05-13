@@ -36,9 +36,9 @@ export default function BoxSearch(){
         viewBox="0 0 24 24" 
         fill="none" 
         stroke="currentColor" 
-        stroke-width="2" 
-        stroke-linecap="round" 
-        stroke-linejoin="round" 
+        strokeWidth="2" 
+        strokeLinecap="round" 
+        strokeLinejoin="round" 
         className="text-slate-400 group-focus-within:text-blue-500 transition-colors"
       >
         <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
@@ -57,7 +57,7 @@ export default function BoxSearch(){
 
     <div className="absolute inset-y-0 right-0 flex items-center pr-3">
       <button className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 transition-colors">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
         </svg>
       </button>
@@ -67,7 +67,7 @@ export default function BoxSearch(){
   </div>
 
   <p className="mt-2 text-[11px] text-slate-400 ml-3 flex items-center gap-1">
-    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
     Gợi ý: Tìm theo @Username chính xác để có kết quả tốt nhất 
   </p>
   </div>

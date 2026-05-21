@@ -3,9 +3,9 @@ import { Sparkles, MessageSquarePlus } from 'lucide-react';
 
 export default function  EmptyChat(){
   return (
-    <div className="flex flex-col items-center justify-center h-full w-full bg-slate-50">
+    <div className="flex flex-col items-center justify-center rounded-[40px]  dark:text-white bg-white dark:bg-gray-900 w-full bg-slate-50">
       {/* Container chính trắng tinh trên nền xám cực nhẹ */}
-      <div className="flex flex-col items-center p-12 bg-white rounded-[40px] shadow-sm border w-full border-slate-100">
+      <div className="flex flex-col items-center p-12 rounded-[40px] shadow-sm border w-full border-slate-100 overflow-hidden">
         
         {/* Icon xanh nhạt dịu mắt */}
         <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center mb-8">
@@ -14,7 +14,7 @@ export default function  EmptyChat(){
 
         {/* Nội dung cực kỳ rõ ràng, sáng sủa */}
         <div className="text-center space-y-4">
-          <h2 className="text-2xl font-bold text-slate-700 tracking-tight">
+          <h2 className="text-2xl font-bold text-slate-700  dark:text-white tracking-tight">
             Bắt đầu câu chuyện mới
           </h2>
           <p className="text-slate-400 max-w-[260px] text-[15px] leading-relaxed">

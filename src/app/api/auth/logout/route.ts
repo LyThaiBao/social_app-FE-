@@ -8,13 +8,14 @@ export async function GET(request:NextRequest){
     const cook = await cookies();
 
     const refreshToken = cook.get("refreshToken")?.value;
-    cook.delete("accessToken");
-    cook.delete("refreshToken");
+  
     const url = `${process.env.BACKEND_URL}/api/auth/logout`
     try{
         const response = await axios.post<APIResponse<LogoutResponse>>(url,{refreshToken});
         const result = response.data;
         console.log(">>> DATA LOGOUT: ",result);
+          cook.delete("accessToken");
+    cook.delete("refreshToken");
         return NextResponse.json({message:result.message,data:result.body,isSucsess:true},{status:200})
     }
     catch(err:any){

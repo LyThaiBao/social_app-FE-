@@ -45,7 +45,7 @@ export default function PostItem({post}:{post:PostResponse}){
 
   {post.mediaUrl && <div className="mb-4 rounded-lg overflow-hidden border border-gray-50 bg-gray-50 max-h-[450px] flex items-center justify-center">
     <img 
-      src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1000&auto=format&fit=crop" 
+      src={post.mediaUrl} 
       alt="Post media" 
       className="w-full h-full object-cover"
     />

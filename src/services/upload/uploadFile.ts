@@ -1,10 +1,9 @@
 import { RouteResponse } from "@/types/routeResponse/routeResponse";
 import { UploadResponse } from "@/types/upload/uploadResponse";
-import { apiServer } from "../axios/apiServer";
 import { throwClientException } from "../exception/throwClientException";
 import { apiClient } from "../axios/apiClient";
 
-export async function uploadFile(file:File,signal:AbortSignal){
+export async function uploadFile(file:File,signal?:AbortSignal){
     const url = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/upload`
     const formData = new FormData();
    

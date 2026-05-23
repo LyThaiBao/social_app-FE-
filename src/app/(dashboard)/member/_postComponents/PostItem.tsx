@@ -4,14 +4,24 @@ import {onToggleLike as toggleLike} from "@/services/like/onToggleLike"
 import {Heart} from'lucide-react'
 import { useRouter } from 'next/navigation'
 import { toRelative } from '@/utils/convertTime'
+import { useState } from 'react'
+import PostOptionsDropdown from './PostOptionsDropdown'
+import { MediaType } from '@/enums/mediaType'
 
 export default function PostItem({post}:{post:PostResponse}){
 
   const router = useRouter();
+
+  const [isOnOption,setOnOption] = useState<boolean>(false);
     async function onToggleLike(postId:number){
       console.log(">>LIKE")
      const result =  await toggleLike(postId);
      router.refresh();
+    }
+
+    function onOption(post:PostResponse){
+      setOnOption(pre =>!pre);
+      console.log(">>>POST: ",post)
     }
 
   return <div className="bg-white dark:bg-gray-800 text-black dark:text-white rounded-xl shadow-sm border border-gray-100 p-4 mb-4 max-w-xl mx-auto">
@@ -32,21 +42,30 @@ export default function PostItem({post}:{post:PostResponse}){
       </div>  
     </div>
     
-    <button className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-50">
+    <div className='relative'>
+      <button onClick={()=>onOption(post)} className="text-gray-400  mb-2 hover:text-gray-600 p-1 rounded-full hover:bg-gray-50">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-5 h-5">
         <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM12 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0ZM17.25 12a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
       </svg>
     </button>
+    {isOnOption&&<PostOptionsDropdown setOnOption={setOnOption} post={post}/>}
+    </div>
   </div>
-
   <div className="text-sm mb-3 whitespace-pre-wrap break-words leading-relaxed">
    {post.content}
   </div>
 
-  {post.mediaUrl && <div className="mb-4 rounded-lg overflow-hidden border border-gray-50 bg-gray-50 max-h-[450px] flex items-center justify-center">
+  {post.mediaUrl&&post.mediaType == MediaType.IMAGE && <div className="mb-4 rounded-lg overflow-hidden border border-gray-50 bg-gray-50 max-h-[450px] flex items-center justify-center">
     <img 
       src={post.mediaUrl} 
       alt="Post media" 
+      className="w-full h-full object-cover"
+    />
+  </div>}
+    {post.mediaUrl&&post.mediaType == MediaType.VIDEO && <div className="mb-4 rounded-lg overflow-hidden border border-gray-50 bg-gray-50 max-h-[450px] flex items-center justify-center">
+    <video
+    controls 
+      src={post.mediaUrl} 
       className="w-full h-full object-cover"
     />
   </div>}
@@ -59,7 +78,7 @@ export default function PostItem({post}:{post:PostResponse}){
       <span>Thích {post.totalLikes}</span>
     </button> 
 
-    <button className="flex items-center justify-center space-x-2 py-2 w-1/2 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors">
+    <button  className="flex items-center justify-center space-x-2 py-2 w-1/2 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-5 h-5">
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641l-.318 1.235c-.149.574.419 1.103.973.862l1.401-.611c.543-.237 1.161-.162 1.691.132A8.615 8.615 0 0 0 12 20.25Z" />
       </svg>

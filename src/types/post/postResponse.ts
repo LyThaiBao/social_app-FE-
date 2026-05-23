@@ -1,3 +1,4 @@
+import { MediaType } from "@/enums/mediaType";
 import { PostType } from "@/enums/postStatus";
 
 
@@ -9,6 +10,7 @@ export interface PostResponse {
     totalLikes:number;
     liked:boolean;
     mediaUrl:string;
+    mediaType:MediaType;
     status:PostType;
     createdAt:string;    
 }

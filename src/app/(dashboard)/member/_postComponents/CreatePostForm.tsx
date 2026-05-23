@@ -39,15 +39,19 @@ export default function CreatePostForm({setOpenTemplate}:CreatePostFormPropsType
     const dataSend:PostRequest = {
       content:info.content,
       mediaUrl:media?.mediaUrl,
+      mediaType:media?.mediaType,
       status:info.status,
     }
     const create  =  createPost(dataSend);
     toast.promise(create,{
-      success:"Created",
+      success:()=>{
+           router.refresh();
+        return "Created";
+      },
       error:(err)=>{return err},
       loading:"Creating..."
     })
-    router.refresh();
+ 
     setOpenTemplate(false);
 
     
@@ -72,7 +76,7 @@ export default function CreatePostForm({setOpenTemplate}:CreatePostFormPropsType
           </label>
           <select 
           {...register("status")}
-            className="w-full  dark:bg-gray-400  sm:w-auto bg-gray-50 border border-gray-200 text-gray-800 text-sm rounded-lg p-2.5 outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all font-medium"
+            className="w-full   sm:w-auto bg-gray-50 border border-gray-200 text-gray-800 text-sm rounded-lg p-2.5 outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all font-medium"
           >
             <option value="PUBLIC">Công khai (PUBLIC)</option>
             <option value="FRIENDS_ONLY">Bạn bè (FRIENDS)</option>
@@ -89,7 +93,7 @@ export default function CreatePostForm({setOpenTemplate}:CreatePostFormPropsType
             {...register("content")}
             rows={4}
             placeholder="Bạn đang nghĩ gì thế?..."
-            className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none leading-relaxed dark:bg-gray-400 "
+            className="w-full bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg p-3 outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none leading-relaxed "
           />
           <small className = "text-red-500">{errors.content?.message}</small>
           <p className="mt-1 text-xs text-red-500 hidden">Vui lòng nhập content</p>
@@ -101,7 +105,7 @@ export default function CreatePostForm({setOpenTemplate}:CreatePostFormPropsType
           </label>
           
           <div className="flex items-center justify-center w-full">
-            <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-200 border-dashed  dark:bg-gray-400  rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+            <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-200 border-dashed    rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
               <div className="flex flex-col items-center justify-center pt-5 pb-6 text-gray-500 px-4 text-center ">
              {watch("media") && !isUpload&& watch("media")?.name}
              {isUpload&&<div>Uploading...</div>}
@@ -127,6 +131,7 @@ export default function CreatePostForm({setOpenTemplate}:CreatePostFormPropsType
       
         <div className="flex items-center justify-end space-x-3 pt-2 border-t border-gray-100">
           <button 
+          onClick={()=>setOpenTemplate(false)}
             type="button"
             className="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
           >

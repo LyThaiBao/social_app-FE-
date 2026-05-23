@@ -4,10 +4,8 @@ import { MessageType } from "@/enums/messageType";
 import { useChatContext } from "@/hooks/useChatContext";
 import { LastMessageResponse } from "@/types/message/lastMessageResponse";
 import { toRelative } from "@/utils/convertTime";
-import { MessageCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { string } from "zod";
 
 interface ConversationItemProps {
   name: string;
@@ -51,7 +49,7 @@ export default function ConversationItem({ name, lastMessage,lastTime, isActive,
       <div className="flex-1 min-w-0">
         <h4 className="font-semibold truncate">{name}</h4>
         <p className="text-gray-500 text-sm truncate">
-          {unRead[id] ? <b className="text-black">Có tin nhắn chưa đọc</b>: lastMessage?.messageType == MessageType.RECALLED?"Tin nhắn đã bị thu hồi":
+          {unRead[id] ? <b className="text-black dark:text-white">Có tin nhắn chưa đọc</b>: lastMessage?.messageType == MessageType.RECALLED?"Tin nhắn đã bị thu hồi":
           lastMessage?.content ? ((lastMessage?.senderId != Number(ownerId)?`${lastMessage?.senderName}: `:"Bạn: ") + `${lastMessage?.content ? lastMessage.content: lastMessage?.mediaType}`):"Hãy bắt đầu cuộc trò chuyện..." }
         </p>
       </div>

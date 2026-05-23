@@ -9,7 +9,7 @@ export async function POST(request:Request){
     const info = await request.json();
     const url = `${process.env.BACKEND_URL}/api/friendship/denie`;
     try{
-        const response = await apiServer.post<APIResponse<FriendShipResponse>>(url,{info});
+        const response = await apiServer.post<APIResponse<FriendShipResponse>>(url,info);
         const result =  response.data;
      
         return NextResponse.json({message:result.message,data:result.body},{status:200});

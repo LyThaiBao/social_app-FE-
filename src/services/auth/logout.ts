@@ -2,6 +2,8 @@ import { RouteResponse } from "@/types/routeResponse/routeResponse"
 import axios from "axios";
 
 export async function logout(){
+  localStorage.removeItem("fullName");
+  localStorage.removeItem("memberId");
     try{
         const response = await axios.get<RouteResponse<string>>("/api/auth/logout")
         const result = response.data;

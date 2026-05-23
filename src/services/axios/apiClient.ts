@@ -1,7 +1,6 @@
 import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig,AxiosRequestConfig } from "axios";
 import {refreshToken} from "@/services/auth/refresh"
 export const apiClient = axios.create({
-
     withCredentials:true
 })
 
@@ -29,3 +28,7 @@ apiClient.interceptors.response.use(
         return Promise.reject(err);
     }
     )
+
+        
+   
+    

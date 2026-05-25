@@ -7,12 +7,14 @@ import { toRelative } from '@/utils/convertTime'
 import { useState } from 'react'
 import PostOptionsDropdown from './PostOptionsDropdown'
 import { MediaType } from '@/enums/mediaType'
+import CommentBox from './BoxComment'
 
 export default function PostItem({post}:{post:PostResponse}){
 
   const router = useRouter();
 
   const [isOnOption,setOnOption] = useState<boolean>(false);
+  const [isOpenCom,setOpenCom] = useState<boolean>(false);
     async function onToggleLike(postId:number){
       console.log(">>LIKE")
      const result =  await toggleLike(postId);
@@ -78,13 +80,14 @@ export default function PostItem({post}:{post:PostResponse}){
       <span>Thích {post.totalLikes}</span>
     </button> 
 
-    <button  className="flex items-center justify-center space-x-2 py-2 w-1/2 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors">
+    <button onClick={()=>setOpenCom(true)}  className="flex items-center justify-center space-x-2 py-2 w-1/2 hover:bg-gray-50 hover:text-blue-600 rounded-lg transition-colors">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-5 h-5">
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641l-.318 1.235c-.149.574.419 1.103.973.862l1.401-.611c.543-.237 1.161-.162 1.691.132A8.615 8.615 0 0 0 12 20.25Z" />
       </svg>
       <span>Bình luận</span>
     </button>
   </div>
+     {isOpenCom&& <CommentBox postId={post.id} setOpenComBox={setOpenCom}/>}
 
 </div>
 }

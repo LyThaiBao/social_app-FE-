@@ -22,7 +22,7 @@ export default function Sidebar({setSideBar}:{setSideBar:(isOpen:boolean)=>void}
     { name: "Bạn bè", href: "/member/friends", icon: Users },
     { name: "Tin nhắn", href: "/member/chat", icon: MessageSquare },
     { name: "Thông báo", href: "/member/notifications", icon: Bell },
-    { name: "Cài đặt", href: "/member/settings", icon: Settings },
+    { name: "Cài đặt", href: "/member/settings/appearance", icon: Settings },
   ];
 
 

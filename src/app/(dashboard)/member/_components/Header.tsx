@@ -6,8 +6,7 @@ import {Moon,Sun} from "lucide-react"
 import { useThemeContext } from "@/hooks/useThemeContext";
 
 export default function Header() {
-  const themeContext = useThemeContext();
-  const theme = themeContext.theme?.theme;
+  
 
   const [fullName,setFullName] =useState<string>("User");
   useEffect(()=>{
@@ -40,14 +39,7 @@ export default function Header() {
             </div>
             <span className="hidden md:block text-sm font-semibold">{fullName}</span>
           </div>
-          <div>
-            {theme == "dark" && <button onClick={()=>themeContext.theme?.setTheme("light")}>
-                <Sun className="text-orange-500" /> 
-              </button>}
-             {theme == "light" && <button onClick={()=>themeContext.theme?.setTheme("dark")}>
-                <Moon className="text-orange-500" /> 
-              </button>}
-          </div>
+         
         </div>
 
       </div>

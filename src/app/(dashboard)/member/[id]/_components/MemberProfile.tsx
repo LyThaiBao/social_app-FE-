@@ -6,11 +6,15 @@ import { findOrCreateConversation } from "@/services/conversation/findOrCreateCo
   import { denieRequest } from "@/services/friendShip/denie";
   import { sendRequest } from "@/services/friendShip/sendRequest";
   import { unfriend } from "@/services/friendShip/unfriend";
+import { getMyPosts } from "@/services/post/getMyPosts";
   import { FriendShipDetail } from "@/types/friendShip/friendShipDetail";
   import { FriendShipRequest } from "@/types/friendShip/sendRequest";
   import { MeResponse } from "@/types/me/meResponse";
+import { PostResponse } from "@/types/post/postResponse";
   import { Calendar, IdCard, TicketX,Handshake, User, MessageCircle, UserPlus,UserPen,UserMinus,MessageCircleX } from "lucide-react";
   import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import PostList from "../../_postComponents/PostList";
   interface MemberProfileProps {
     data: {
       id: number;
@@ -28,6 +32,18 @@ import { findOrCreateConversation } from "@/services/conversation/findOrCreateCo
     const bd = new Date(data.birthDay);
     const jd = new Date(data.joinDay);
     const router = useRouter();
+
+    // -------------GET MY POSTS -----------------------------------
+    const [myPosts,setMyPosts] = useState<PostResponse[]>([]);
+    useEffect(()=>{
+      (async ()=>{
+        const posts = await getMyPosts();
+        console.log(">>>EFFECT: ",posts);
+        if(posts.content.length>0){
+          setMyPosts(posts.content);
+        }
+      })()
+    },[me])
     //----------------Send request add Friend ----------------------
   async function addFriend(){
     console.log("ADDFR")
@@ -229,30 +245,20 @@ import { findOrCreateConversation } from "@/services/conversation/findOrCreateCo
                     <p className="text-sm font-medium text-gray-700 dark:text-white">{`${bd.getDate()}/${bd.getMonth()+1}/${bd.getFullYear()}`}</p>
                   </div>
                 </div>
-
-                {/* <div className="flex items-start gap-4">
-                  <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
-                    <Mail size={20} />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-400 font-bold uppercase tracking-tighter">Email</p>
-                    <p className="text-sm font-medium text-gray-700">thaibao.it@example.com</p>
-                  </div>
-                </div> */}
               </div>
             </div>
           </div>
 
-          {/* Cột phải: Hoạt động/Bài viết (Chiếm 2 phần) */}
           <div className="lg:col-span-2">
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-sm border border-gray-100 h-full min-h-[300px] flex items-center justify-center">
+           {myPosts.length == 0 && <div className="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-sm border border-gray-100 h-full min-h-[300px] flex items-center justify-center">
               <div className="text-center">
                 <div className="inline-flex p-4 bg-gray-50 rounded-full mb-4">
                   <User size={32} className="text-gray-300" />
                 </div>
                 <p className="text-gray-400 italic">Chưa có bài viết hay hoạt động nào gần đây.</p>
               </div>
-            </div>
+            </div>}
+          <PostList postList={myPosts}/>
           </div>
 
         </div>

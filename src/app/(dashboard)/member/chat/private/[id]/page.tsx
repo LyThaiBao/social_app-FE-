@@ -206,7 +206,6 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
       })
       setValue("file",undefined);
       setMedia(null);
-    //   router.refresh();// refresh lai SC 
       //------------Case reply-----------
       setReplyMessage(null);
     }

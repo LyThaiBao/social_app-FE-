@@ -37,7 +37,7 @@ import PostList from "../../_postComponents/PostList";
     const [myPosts,setMyPosts] = useState<PostResponse[]>([]);
     useEffect(()=>{
       (async ()=>{
-        const posts = await getMyPosts();
+        const posts = await getMyPosts({memberId:data.id});
         console.log(">>>EFFECT: ",posts);
         if(posts.content.length>0){
           setMyPosts(posts.content);
@@ -218,10 +218,10 @@ import PostList from "../../_postComponents/PostList";
           </div>
         </div>
 
-        {/* Bố cục 2 cột cho màn rộng */}
+    
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
-          {/* Cột trái: Thông tin chi tiết (Chiếm 1 phần) */}
+          
           <div className="lg:col-span-1 space-y-6">
             <div className="bg-white dark:bg-gray-800 dark:text-white p-6 rounded-3xl shadow-sm border border-gray-100">
               <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 text-left">Giới thiệu</h3>
@@ -250,14 +250,16 @@ import PostList from "../../_postComponents/PostList";
           </div>
 
           <div className="lg:col-span-2">
-           {myPosts.length == 0 && <div className="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-sm border border-gray-100 h-full min-h-[300px] flex items-center justify-center">
+           {myPosts.length == 0 && 
+           <div className="bg-white dark:bg-gray-800 p-6 rounded-3xl shadow-sm border border-gray-100 h-full min-h-[300px] flex items-center justify-center">
               <div className="text-center">
                 <div className="inline-flex p-4 bg-gray-50 rounded-full mb-4">
                   <User size={32} className="text-gray-300" />
                 </div>
                 <p className="text-gray-400 italic">Chưa có bài viết hay hoạt động nào gần đây.</p>
               </div>
-            </div>}
+            </div>
+           }
           <PostList postList={myPosts}/>
           </div>
 

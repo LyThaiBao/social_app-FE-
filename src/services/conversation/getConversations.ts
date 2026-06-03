@@ -4,19 +4,18 @@ import { throwClientException } from "../exception/throwClientException";
 import { APIResponse } from "@/types/apiResponse/APIResponse";
 import { RouteResponse } from "@/types/routeResponse/routeResponse";
 import { apiServer } from "../axios/apiServer";
+import { throwServerException } from "../exception/throwServerException";
 
-export async function getConversations({token,next}:{token:string,next:any}){
+export async function getConversations(){
     const url = `${process.env.BACKEND_URL}/api/conversations`
     try{
         const response = await apiServer.get<APIResponse<ConversationResponse[]>>(url)
         
-
         const result =  response.data;
-     
         return result.body;
     }
     catch(err:unknown){
         console.log(">>>ERROR: ",err);
-        throwClientException(err);
+        throwServerException(err);
     }
 }

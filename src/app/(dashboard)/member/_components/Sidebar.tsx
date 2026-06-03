@@ -64,7 +64,7 @@ export default function Sidebar({setSideBar}:{setSideBar:(isOpen:boolean)=>void}
           })}
         </nav>
 
-        {/* Nút Logout nằm ở dưới cùng của Sidebar */}
+
         <div className="pt-4 mt-4 border-t border-slate-100">
           <button onClick={onLogout} className="flex items-center gap-3 px-3 py-2.5 w-full dark:text-red-500 text-slate-600 hover:bg-red-50 hover:text-red-600 rounded-lg transition-all">
             <LogOut size={20} />

@@ -7,10 +7,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request:NextRequest){
 
-    const cook = await cookies();
-    const refreshToken = cook.get("refreshToken")?.value;
-    const info =await request.json();
-    console.log(">>>ROUTE: ",refreshToken); 
+    const info = await request.json();
     try{
         const response = await axios.post<APIResponse<RefreshResponse>>(`${process.env.BACKEND_URL}/api/auth/refresh`,info
         ,{headers:{
@@ -18,7 +15,12 @@ export async function POST(request:NextRequest){
         }});
 
         const result = response.data;
-        console.log(">>> REFRSH ROUTE: ",result)
+
+
+        const cook = await cookies();
+        cook.set("accessToken", response.data.body.accessToken, { httpOnly: true, sameSite: "lax", secure: true,path:"/" });
+        cook.set("refreshToken", response.data.body.refreshToken, { httpOnly: true, sameSite: "lax", secure: true,path:"/" });
+
         const toClient = NextResponse.json({message:"Refresh Success",data:result.body,isSuccess:true},{status:response.status});
         toClient.cookies.set("accessToken",result.body.accessToken,{
             httpOnly:true,
@@ -31,12 +33,9 @@ export async function POST(request:NextRequest){
             sameSite:"lax",
             secure:true,
             path:"/"
-
         })
 
-        const cook = await cookies();
-        cook.set("accessToken", response.data.body.accessToken, { httpOnly: true, sameSite: "lax", secure: true,path:"/" });
-        cook.set("refreshToken", response.data.body.refreshToken, { httpOnly: true, sameSite: "lax", secure: true,path:"/" });
+   
         return toClient;
     }
     catch(err:unknown){

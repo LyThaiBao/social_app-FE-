@@ -11,7 +11,7 @@ export default async function FriendPage({searchParams}:{searchParams:Promise<{k
     const cook = await cookies();
     const token = cook.get("accessToken")?.value||"";
   
-      const members:FriendSearchResponse  =   await searchService({token:token,keyword:searPs})||[];
+    const members:FriendSearchResponse  =   await searchService({token:token,keyword:searPs})||[];
   
     return <div>
     

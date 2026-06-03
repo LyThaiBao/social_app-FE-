@@ -5,9 +5,10 @@ import { PagePostResponse } from "@/types/post/pagePostResponse";
 import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(request:NextRequest){
-    const params = new URLSearchParams(request.url)
-    console.log(">>>PARAM: ",params);
-    const url = `${process.env.BACKEND_URL}/api/posts/myPosts`;
+    const params = request.nextUrl.searchParams;
+
+    console.log(">>>PARAM: ",params.get("memberId"));
+    const url = `${process.env.BACKEND_URL}/api/posts/personal?memberId=${params.get("memberId")}`;
     try{
         const response = await apiServer.get<APIResponse<PagePostResponse>>(url);
         console.log(">>>LOG: ",response)

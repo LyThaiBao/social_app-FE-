@@ -1,27 +1,17 @@
-import { ConversationRequest } from "@/types/conversation/conversationRequest";
 import { ConversationResponse } from "@/types/conversation/conversationResponse"
 import { RouteResponse } from "@/types/routeResponse/routeResponse"
+import { apiClient } from "../axios/apiClient";
+import axios from "axios";
+import { throwClientException } from "../exception/throwClientException";
 
 export async function findOrCreateConversation({partnerId}:{partnerId:number}){
     const url = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/conversation`
     try{
-        console.log("PNID: ",partnerId)
-        const response = await fetch(url,{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            credentials:"include",
-            body:JSON.stringify(partnerId)
-        })
-
-        const result:RouteResponse<ConversationResponse> = await response.json();
-        if(!response.ok){
-            throw new Error(result.message);
-        }
+        const response =await apiClient.post<RouteResponse<ConversationResponse>>(url,partnerId);
+        const result = response.data;
         return result.data;
     }
-    catch(err){
-        throw err;
+    catch(err:unknown){
+        throwClientException<ConversationResponse>(err);
     }
 }

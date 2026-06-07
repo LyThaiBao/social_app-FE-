@@ -9,7 +9,6 @@ import {File,Info,Reply, Send,Trash2} from "lucide-react"
 import { TypingResponse } from "@/types/message/typing";
 import { MessageResponse } from "@/types/message/messageResponse";
 import BoxDetail from "../_components/BoxDetail";
-import { useRouter } from "next/navigation";
 import { UploadResponse } from "@/types/upload/uploadResponse";
 import { useForm } from "react-hook-form";
 import { ChatType, SchemaChat } from "@/types/conversation/schemaChat";
@@ -32,11 +31,12 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
     const scrollRef = useRef<HTMLDivElement>(null);
     const [typing,setTyping] = useState<TypingResponse|null>(null);
     const [replyMessage,setReplyMessage]= useState<MessageResponse|null>(null);
-    const chatContext = useChatContext();
-   
-    //----------------Client handShaked-------------------
-        // const client = useContext(ChatContext);
-      
+
+    //---------Get Current member id for show UI their MSG-----------
+    useEffect(()=>{
+        const currentId = localStorage.getItem("memberId")
+        setCurrentId(currentId)
+    },[])
     //----------------------------------------------------
         const context = useChatContext();
     
@@ -44,42 +44,39 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
     useEffect(()=>{
         (async()=>{
             const conversationIdLocal = (await params).id;
-            console.log("PARAM >>>",conversationIdLocal)
                 setConversationId(conversationIdLocal);
         })()
     },[])
 
-   //------------When user appear in this compo all msg of this conv is mark as read
-
-    useEffect(()=>{
-        context.markAsRead(conversationId)
-    },[messages,conversationId])
-
-    //---------GET MESSAGE OLD MSG--------------
+        //---------GET OLD MSG--------------
     useEffect(()=>{
         (async ()=>{
             if (!conversationId || conversationId === "0") return;
             const oldMessage = await getMessageByConversationId({conversationId:Number(conversationId)})
             console.log("LOG OLD MESS",oldMessage);
             setMessages([...oldMessage])
+            console.log(">>>GET OLD MSG")
         })()
     },[conversationId])
+   //------------When user appear in this compo all msg of this conv is mark as read
 
-    //----------Get Conversation to take address for sub ------------
+    useEffect(()=>{
+        context.markAsRead(conversationId)
+                console.log(">>> MARK READ")
+
+    },[messages,conversationId])
+
+    //----------Get Conversation ------------
     useEffect(()=>{
         (async()=>{
-            if (!conversationId || conversationId === "0") return;
+            if (!conversationId) return;
             const id = Number(conversationId);
             const result = await getConversation({id})
             setConversation(result);
         })()
     },[conversationId])
 
-    //---------Get Current member id for show UI their MSG-----------
-    useEffect(()=>{
-        const currentId = localStorage.getItem("memberId")
-        setCurrentId(currentId)
-    },[])
+
 
     //--------Scroll-------------------------------------------------
     useEffect(() => {
@@ -89,15 +86,14 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
     // ---------------Sub convesation -------------------------------
    
     useEffect(()=>{
-        // just sub when had  client and  partnerId
         if (!context.client || !context.client.connected) return;
-        const sub = context.client.subscribe(`/queue/private-${conversationId}`,(msg)=>{
+        const sub = context.client.subscribe(`/user/queue/private`,(msg)=>{
             console.log("NEW MSG: ",msg)
             const newMsg = JSON.parse(msg.body)
             setMessages(pre=>[...pre,newMsg]);
         })
         return () => sub.unsubscribe();
-    },[context.client,conversationId]);
+    },[context.client?.connected]);
 
     //---------------- Typing-----------------
     const timeoutRef = useRef<NodeJS.Timeout|null>(null);
@@ -128,10 +124,9 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
     //-----------------_---Recall------------------
     useEffect(()=>{
         if(!context.client?.connected || !conversationId) return;
-       context.client.subscribe(`/queue/recall-${conversationId}`,(msg)=>{
+       context.client.subscribe(`/user/queue/recall`,(msg)=>{
             const recalledMSG:MessageResponse = JSON.parse(msg.body);
-        //   const msgUpdated = messages;
-        //   console.log("ALL MSG: ",messages);
+            console.log(">>RECALL: ",recalledMSG)
         setMessages(pre => pre.map((m)=>{
             if(m.id == recalledMSG.id){
                 return recalledMSG;
@@ -141,16 +136,14 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
             }
             return m;
         }))
-         
-        console.log("RECALLED: ",msg);
-        })
+    })
     },[context.client,conversationId])
     
 
 
 // -----------------------------------------------------------------------------------
 
-  const router = useRouter();
+
   const [isUploading,setIsUploading] = useState<boolean>(false);
   const [media,setMedia] = useState<UploadResponse|null>(null);
   
@@ -213,7 +206,6 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
       })
       setValue("file",undefined);
       setMedia(null);
-    //   router.refresh();// refresh lai SC 
       //------------Case reply-----------
       setReplyMessage(null);
     }
@@ -253,7 +245,8 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
             context.client.publish({
                 destination:`/app/chat.recall`,
                 body:JSON.stringify({
-                    id:m.id
+                    id:m.id,
+                    conversationId:conversationId
                 })
             })
         }
@@ -290,7 +283,7 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
                     </p>
                 </div>
 )}
-                <div className={`text-black hidden text-sm group-hover:flex ${isMyMessage ?  "order-first": "order-last"} gap-5 m-2`}>
+                <div className={`text-black dark:text-white hidden text-sm group-hover:flex ${isMyMessage ?  "order-first": "order-last"} gap-5 m-2`}>
                     <button onClick={()=>onDetail(m)} >
                         <Info size={15} className="inline mr-1"/>
                         Detail
@@ -312,7 +305,7 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
 
                 <div className="max-w-[70%]" id={`${m.id}`}>
                     
-                    <div className={` p-3 rounded-2xl shadow-sm ${isMyMessage ? "bg-blue-500 text-white rounded-br-none" : "bg-gray-100 text-black rounded-bl-none"}`}>
+                    <div className={` p-3 rounded-2xl shadow-sm text-black dark:text-white ${isMyMessage ? "bg-blue-500  rounded-br-none text-white" : "bg-gray-100  rounded-bl-none dark:bg-gray-600 "}`}>
                         <p className="text-md ">{m.messageType == MessageType.RECALLED ? "Tin nhắn đã bị thu hồi" : m.content}</p>
                         <small className="text-[10px]">{m.sentTime}</small>
                     </div>
@@ -351,7 +344,7 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
 )}
 
     {/* -------------------------------------------------------------------------------------------------- */}
-     <footer className={`fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-[0_-2px_5px_rgba(0,0,0,0.05)]`}>
+     <footer className={`fixed bottom-0 left-0 right-0 p-4 bg-white dark:bg-gray-800 border-t border-gray-200 shadow-[0_-2px_5px_rgba(0,0,0,0.05)]`}>
         <form onSubmit={handleSubmit(onSend)} className="flex items-center gap-2 max-w-4xl mx-auto">
    
      {getValues("file") && 
@@ -371,7 +364,7 @@ export default  function ChatWithMemberPage({ params }: { params: Promise<{ id: 
     </label>
         <input type="text" placeholder="Nhập tin nhắn..." {...register("message")}
             onClick={onTyping}
-            className="  flex-1 px-4 py-3 text-black bg-gray-100 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
+            className="  flex-1 px-4 py-3 text-black bg-gray-100 dark:bg-gray-800 dark:text-white  border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500" />
 
          <button className={`px-6 py-3 flex gap-2 items-center rounded-2xl font-semibold transition ${isUploading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700 text-white"}`}>
             {isUploading ? ( <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>) : (<Send size={18} />)}

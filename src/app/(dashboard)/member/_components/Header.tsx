@@ -1,24 +1,31 @@
 "use client"
 import { getFirstChar } from "@/utils/getFirstChar";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Header() {
-  // const character = getFirstChar(fullName);
-
+  const router = useRouter();
+  
   const [fullName,setFullName] =useState<string>("User");
+  const [memberId,setMemberId] = useState<string|null>(null);
   useEffect(()=>{
     (()=>{
       setFullName(localStorage.getItem("fullName")||"User")
     })()
   },[])
 
+  useEffect(()=>{
+    const member = localStorage.getItem("memberId");
+    setMemberId(member);
+  },[])
+
   return (
-    <header className="fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b border-slate-200 z-50">
+    <header className={`fixed top-0 left-0 right-0 h-16 bg-white/80 backdrop-blur-md border-b text-blue-500 border-slate-200 z-50 dark:bg-gray-900 dark:text-blue-500`}>
       <div className="max-w-7xl mx-auto h-full px-4 flex items-center justify-between">
         
         {/* Logo */}
-        <Link href="/member" className="text-2xl font-black text-blue-600 tracking-tighter">
+        <Link href="/member" className="text-2xl font-black text-blue-500 tracking-tighter">
           SOCIALAPP
         </Link>
 
@@ -31,12 +38,15 @@ export default function Header() {
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
           </button>
 
-          <div className="flex items-center gap-2 pl-2 border-l border-slate-200">
-            <div className="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-sm border border-blue-200">
+          <button  onClick={()=>{
+              router.push(`/member/${memberId}`)
+          }} className="flex items-center gap-2 pl-2 border-l border-slate-200  text-blue-600">
+            <div className="w-9 h-9 bg-blue-100 rounded-full flex items-center justify-center font-bold text-sm border border-blue-200">
               {getFirstChar(fullName)}
             </div>
-            <span className="hidden md:block text-sm font-semibold text-slate-700">{fullName}</span>
-          </div>
+            <span className="hidden md:block text-sm font-semibold">{fullName}</span>
+          </button>
+         
         </div>
 
       </div>

@@ -15,15 +15,15 @@ export default function NotifiEmpty(){
         <span className="absolute -bottom-2 -right-6 text-2xl animate-spin-slow">🌈</span>
     </div>
 
-    <h3 className="text-2xl font-black text-black tracking-tight mb-3">
+    <h3 className="text-2xl font-black text-black tracking-tight mb-3 dark:text-white">
         TỊNH TÂM QUÁ BẠN ƠI!
     </h3>
-    <p className="text-gray-600 font-medium max-w-[280px] leading-relaxed">
-        Hộp thư đang "trống rỗng" như ví tiền của bạn vậy. Đi tương tác dạo đi nào! 🏃‍♂️💨
+    <p className="text-gray-600  dark:text-white font-medium max-w-[280px] leading-relaxed">
+        Hộp thư đang "trống rỗng" như ví tiền của bạn vậy. Đi tương tác dạo đi nào! 
     </p>
 
     <button className="mt-10 px-8 py-3 bg-indigo-500 text-white font-bold rounded-xl border-b-4 border-r-4 border-black hover:translate-x-[2px] hover:translate-y-[2px] hover:border-b-2 hover:border-r-2 transition-all active:scale-95 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-        ĐI KIẾM CHUYỆN NÈ! 🚀
+        ĐI KIẾM CHUYỆN NÈ!
     </button>
 
     <style jsx>{`

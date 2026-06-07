@@ -1,25 +1,17 @@
 import { LastMessageResponse } from "@/types/message/lastMessageResponse";
-import { RouteResponse } from "@/types/routeResponse/routeResponse";
+import { throwClientException } from "../exception/throwClientException";
+import { APIResponse } from "@/types/apiResponse/APIResponse";
+import { apiServer } from "../axios/apiServer";
 
-export async function getLastMessageByConversationId({conversationId,token}:{conversationId:number,token:string}){
-
-    const url =   `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/message/lastmessage`;
+export async function getLastMessageByConversationId({conversationId}:{conversationId:number}){
+    const url =   `${process.env.BACKEND_URL}/api/messages/lastmessage`;
     try{
-        const response = await fetch(url,{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json",
-                Cookie:`accessToken=${token}`
-            },
-            body:JSON.stringify({conversationId:conversationId})
-        })
-        const result:RouteResponse<LastMessageResponse> = await response.json();
-        if(!response.ok){
-            throw new Error(result.message);
-        }
-        return result.data;
+        const response = await apiServer.post<APIResponse<LastMessageResponse>>(url,{conversationId:conversationId})
+        const result =  response.data;
+       
+        return result.body;
     }
-    catch(err){
-        throw err;
+    catch(err:unknown){
+        throwClientException(err);
     }
 }

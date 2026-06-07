@@ -1,23 +1,21 @@
 import { ConversationResponse } from "@/types/conversation/conversationResponse"
-import { RouteResponse } from "@/types/routeResponse/routeResponse"
+import { apiClient } from "../axios/apiClient";
+import { throwClientException } from "../exception/throwClientException";
+import { APIResponse } from "@/types/apiResponse/APIResponse";
+import { RouteResponse } from "@/types/routeResponse/routeResponse";
+import { apiServer } from "../axios/apiServer";
+import { throwServerException } from "../exception/throwServerException";
 
-export async function getConversations({token,next}:{token:string,next:any}){
-    const url = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/conversation`
+export async function getConversations(){
+    const url = `${process.env.BACKEND_URL}/api/conversations`
     try{
-        const response = await fetch(url,{
-            method:"GET",
-            headers:{
-                Cookie:`accessToken=${token}`
-            },
-        })
-
-        const result:RouteResponse<ConversationResponse[]> = await response.json();
-        if(!response.ok){
-            throw new Error(result.message);
-        }
-        return result.data;
+        const response = await apiServer.get<APIResponse<ConversationResponse[]>>(url)
+        
+        const result =  response.data;
+        return result.body;
     }
-    catch(err){
-        throw err;
+    catch(err:unknown){
+        console.log(">>>ERROR: ",err);
+        throwServerException(err);
     }
 }

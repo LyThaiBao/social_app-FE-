@@ -17,7 +17,6 @@ export default function LoginPage() {
     const result = await login(loginInfo);
     router.push(`/${result?.role}`)
     localStorage.setItem("fullName",result?.fullName||"");
-    console.log("SUCCESS: ",result)
    }
    catch(err){
     if(err instanceof Error){

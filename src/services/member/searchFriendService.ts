@@ -3,19 +3,20 @@ import { throwClientException } from "../exception/throwClientException";
 import { APIResponse } from "@/types/apiResponse/APIResponse";
 import { cookies } from "next/headers";
 import { apiServer } from "../axios/apiServer";
+import { RouteResponse } from "@/types/routeResponse/routeResponse";
+import { throwServerException } from "../exception/throwServerException";
 
-export async function searchService({keyword}:{keyword?:string}){
-    const cook = await cookies();
-    const accessToken = cook.get("accessToken")?.value;
-    console.log(">>> TOKEN: ",accessToken);
-    const url = `${process.env.BACKEND_URL}/api/members/search?keyword=${keyword}`
+export async function searchFriendService({keyword}:{keyword?:string}){
+    console.log(">>>RESPONSE: ");
+    const url = `${process.env.BACKEND_URL}/api/members/friends/search?keyword=${keyword}`
     try{
         const response = await apiServer.get<APIResponse<FriendSearchResponse>>(url)
+        console.log(">>>RESPONSE: ",response)
         const result =  response.data
         return result.body;
     }
     catch(err:unknown){
         console.log(">> SEARCH: ",err);
-        throwClientException(err);
+        throwServerException(err);
     }
 }

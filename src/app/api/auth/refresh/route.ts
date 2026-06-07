@@ -16,7 +16,6 @@ export async function POST(request:NextRequest){
 
         const result = response.data;
 
-
         const cook = await cookies();
         cook.set("accessToken", response.data.body.accessToken, { httpOnly: true, sameSite: "lax", secure: true,path:"/" });
         cook.set("refreshToken", response.data.body.refreshToken, { httpOnly: true, sameSite: "lax", secure: true,path:"/" });

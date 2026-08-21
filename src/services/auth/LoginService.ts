@@ -8,11 +8,13 @@ import { throwClientException } from "../exception/throwClientException";
 
 export async function login(loginInfo:LoginRequestType){
        try{
+         console.log("IN SVC")
         const response = await axios.post<RouteResponse<LoginResponse>>(`/api/auth/login`,loginInfo)
         // dữ liệu trả về từ Server nằm trong property 'data'
         const result = response.data;
         // Axios mặc định coi các status code ngoài 2xx là Error,không cần check !response.ok
         localStorage.setItem("memberId",String(result.data.memberId));
+        console.log(">>>SERC: ",result)
         return result.data;
        }
        catch(err:unknown){ // tren server da check loi connect

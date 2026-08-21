@@ -1,6 +1,7 @@
 'use client';
 
 
+import { Role } from '@/enums/roleType';
 import { login } from '@/services/auth/LoginService';
 import { LoginRequestType, LoginSchema } from '@/types/login/LoginRequest';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,8 +15,10 @@ export default function LoginPage() {
   const router = useRouter();
   async function onLogin(loginInfo:LoginRequestType){
    try{
+    // console.log(">>>TRY")
     const result = await login(loginInfo);
-    router.push(`/${result?.role}`)
+    // console.log(">>LOGIN: ",result)
+    router.push(`/${result?.roles.includes(Role.ROLE_ADMIN)?'admin':'member'}`)
     localStorage.setItem("fullName",result?.fullName||"");
    }
    catch(err){

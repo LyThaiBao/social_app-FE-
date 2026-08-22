@@ -5,7 +5,7 @@ import { throwServerException } from "../exception/throwServerException";
 
 export async function getNewPosts(){
     const url = `${process.env.BACKEND_URL}/api/posts`
-    console.log(">>>LOG");
+    console.log(">>>post>getNewPost[8]");
     try{
         const response = await apiServer.get<APIResponse<PagePostResponse>>(url);
         const result = response.data;

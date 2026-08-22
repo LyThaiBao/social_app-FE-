@@ -16,7 +16,7 @@ This is the **Frontend** for **Social Connect** — a social networking app that
 
 | Landing | Chat | Profile | Notification | Posts |
 |---|---|---|---|---|
-| ![Landing](public/Landing.png) | ![Chat](public/chat.png) | ![Profile](public/profile.png) | ![Notifacation](public/notification.png) | ![Posts](public/posts.png) |
+| ![Landing](public/landing.png) | ![Chat](public/chat.png) | ![Profile](public/profile.png) | ![Notifacation](public/notification.png) | ![Posts](public/posts.png) |
 
 
 

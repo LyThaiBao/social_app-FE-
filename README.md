@@ -1,39 +1,99 @@
+# 🌐 Social Connect — Frontend
+
+![Status](https://img.shields.io/badge/status-in%20development-yellow)
+![Frontend](https://img.shields.io/badge/frontend-Next.js-black)
+![Language](https://img.shields.io/badge/language-TypeScript-blue)
+
+> ⚠️ **This project is currently under active development.**
+
+## 📖 Overview
+
+This is the **Frontend** for **Social Connect** — a social networking app that lets users add friends, chat, create posts, and interact with each other. This repository builds the user interface and communicates with the Backend API over REST.
+
+🔗 Backend repo: [social-connect-backend](https://github.com/LyThaiBao/Social_App)
+
+## 📸 Screenshots
+
+| Landing | Chat | Profile | Notification | Posts |
+|---|---|---|---|---|
+| ![Landing](public/Landing.png) | ![Chat](public/chat.png) | ![Profile](public/profile.png) | ![Notifacation](public/notification.png) | ![Posts](public/posts.png) |
 
 
 
+## ✨ Key Features
 
-<!-- Some thing hard when I code this web -->
-I must handle couple key of requester and addresser in friendship
+- 🤝 **Friend system** — send/accept friend requests
+- 💬 **Messaging** — direct chat between users
+- 📝 **Posts** — create and share content
+- ❤️ **Likes** — react to posts
+- 💭 **Comments** — discuss under posts
+- 🔍 **Friend search** — find and connect with other users
 
+## 🛠️ Tech Stack
 
-Vấn đề: Quản lý vòng đời và Hủy tiến trình Upload File (Upload Cancellation)
-1. Thách thức (Challenges)
-Trong quá trình phát triển tính năng upload file cho SocialApp, tôi đối mặt với bài toán tối ưu hóa trải nghiệm người dùng (UX) và tài nguyên hệ thống:
+| Layer | Technology |
+|---|---|
+| **Framework** | Next.js (TypeScript) |
+| **Form handling** | React Hook Form (RHF) |
+| **HTTP client** | Axios |
+| **Schema validation** | Zod |
+| **Tools** | Git, GitHub |
 
-Vấn đề: Khi người dùng chọn nhầm file hoặc muốn hủy tác vụ upload đang diễn ra, việc để request chạy đến cùng gây lãng phí băng thông (bandwidth) và tài nguyên lưu trữ trên Cloudinary.
+## 🏗️ Architecture Highlights
 
-Rủi ro: Nếu chỉ đơn thuần xóa file trên UI (Local State), request thực tế vẫn đang chạy ngầm trên Network, dẫn đến việc dữ liệu rác vẫn được ghi vào hệ thống backend hoặc gây lỗi nếu request kết thúc sau khi user đã thoát khỏi ngữ cảnh hiện tại.
+- ✅ **Type-safe** codebase built with TypeScript
+- 📋 **Efficient form handling** with React Hook Form, minimizing unnecessary re-renders
+- 🛡️ **Strict input validation** using Zod before sending requests to the Backend
+- 🔄 **API communication** via Axios, in sync with the Backend's JWT + Token Rotation authentication flow
 
-2. Các phương án tiếp cận
-Phương án 1 (Hủy phía Server): Upload xong mới gọi API xóa.
+## 📁 Project Structure (simplified)
 
-Đánh giá: Dễ triển khai nhưng gây lãng phí tài nguyên (tốn tiền lưu trữ, tốn băng thông) và tạo thêm độ trễ (latency) không cần thiết.
+```
+src/
+├── app/         # Routing via Next.js App Router
+├── (dashboard)/ # Dashboard route group / layout
+├── api/         # API route handlers
+├── auth/        # Authentication logic
+├── context/     # React context providers
+├── enum/        # Shared enums
+├── hooks/       # Custom React hooks
+├── service/     # API service calls (Axios)
+├── types/       # TypeScript type definitions
+├── utils/       # Helper functions
+└── proxy.ts     # Request proxy config
+```
 
-Phương án 2 (Hủy giữa chừng tại Cloud): Can thiệp trực tiếp để dừng quá trình upload trên Cloudinary.
+## 🚀 How to Run Locally
 
-Đánh giá: Bất khả thi vì API upload của các dịch vụ Cloud thường là "Atomic" (xử lý trọn gói).
+### 1. Clone the repository
+```bash
+git clone https://github.com/LyThaiBao/social_app-FE-.git
+cd social-connect-frontend
+```
 
-Phương án tối ưu (Hủy tại Client - Frontend): Ngắt kết nối ngay từ phía trình duyệt.
+### 2. Install dependencies
+```bash
+npm install
+```
 
-3. Giải pháp kỹ thuật (The Solution)
-Tôi áp dụng AbortController kết hợp với AbortSignal để kiểm soát luồng dữ liệu. Điều này tương tự như cơ chế quản lý tiến trình trong Hệ điều hành (OS):
+### 3. Configure environment variables
 
-Tư duy hệ thống: Tôi ví von hành động này với việc gửi một Signal (ví dụ SIGUSR2) tới một tiến trình (Process) để yêu cầu nó thực hiện "Graceful Shutdown" (dừng công việc và dọn dẹp tài nguyên).
+Create a `.env.local` file based on the `.env.example` template:
+```env
+BACKEND_URL="http://localhost:8080"
+NEXT_PUBLIC_FRONTEND_URL="http://localhost:3000"
+NEXT_PUBLIC_WS_URL="http://localhost:3000/ws"
+```
 
-Triển khai: * Tạo một AbortController instance mỗi khi bắt đầu một request upload.
+> ⚠️ The **Backend** must be running first for the API to work (default: `http://localhost:8080/api`).
 
-Truyền signal vào hàm fetch hoặc các service network.
+### 4. Run the application
+```bash
+npm run dev
+```
 
-Khi người dùng nhấn "Hủy", tôi gọi phương thức .abort(). Trình duyệt sẽ ngay lập tức cắt đứt kết nối TCP stream đang truyền dữ liệu, giúp Backend nhận được tín hiệu "Client disconnected" và dừng việc xử lý dữ liệu ngay lập tức.
+Available at: `http://localhost:3000`
 
-Kết quả: Tài nguyên mạng được giải phóng ngay lập tức, không có dữ liệu dư thừa trên server, hệ thống đảm bảo tính toàn vẹn (data integrity) mà không cần thêm API xóa tốn kém.
+## 📄 License
+
+All rights reserved by Timmy.
